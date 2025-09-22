@@ -5,82 +5,174 @@ import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Input } from '@/components/ui/input';
 import { Progress } from '@/components/ui/progress';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { useLanguage } from '@/contexts/LanguageContext';
+import { useIsMobile } from '@/hooks/use-mobile';
+import InfoSection from './InfoSection';
 import { 
-  Target, BookOpen, MessageCircle, Award, Calendar, 
-  Users, FileText, TrendingUp, Clock, Star, Home,
-  Search, Bell, Settings, Info, User, GraduationCap
+  BookOpen, Target, Award, Calendar, FileText, 
+  Users, MessageCircle, TrendingUp, GraduationCap,
+  Search, Filter, Plus, Eye, Edit, Trash2,
+  CheckCircle, Clock, AlertTriangle, Star,
+  Globe, DollarSign, Video, Phone, Mail,
+  Download, Share2, ExternalLink, Home,
+  Bell, Settings, User, ChevronRight,
+  BarChart3, PieChart, LineChart, Info
 } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+
+interface Scholarship {
+  id: string;
+  title: string;
+  university: string;
+  country: string;
+  deadline: string;
+  amount: string;
+  status: 'eligible' | 'applied' | 'saved' | 'accepted' | 'rejected';
+  matchPercentage: number;
+  requirements: string[];
+}
+
+interface Application {
+  id: string;
+  scholarship: string;
+  university: string;
+  status: 'draft' | 'in_progress' | 'submitted' | 'under_review' | 'accepted' | 'rejected';
+  progress: number;
+  nextStep: string;
+  deadline: string;
+  documents: { name: string; status: string }[];
+}
+
+interface Mentor {
+  id: string;
+  name: string;
+  title: string;
+  university: string;
+  expertise: string[];
+  rating: number;
+  avatar: string;
+  nextSession?: string;
+  isOnline: boolean;
+}
 
 const EnhancedStudentDashboard: React.FC = () => {
-  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('dashboard');
+  const [showInfo, setShowInfo] = useState(false);
+  const { t } = useLanguage();
+  const isMobile = useIsMobile();
 
-  const scholarships = [
+  // Enhanced mock data
+  const scholarships: Scholarship[] = [
     {
-      id: 1,
-      title: 'Fulbright Scholarship Program',
-      provider: 'U.S. Department of State',
-      deadline: '2024-10-15',
-      amount: '$50,000',
-      status: 'open',
-      match: 95
+      id: '1',
+      title: 'Fulbright Ethiopia Program',
+      university: 'Various US Universities',
+      country: 'United States',
+      deadline: '2024-12-15',
+      amount: '$35,000/year',
+      status: 'eligible',
+      matchPercentage: 92,
+      requirements: ['GPA 3.5+', 'TOEFL 100+', 'Research proposal', 'Community service']
     },
     {
-      id: 2,
-      title: 'Rhodes Scholarship',
-      provider: 'Rhodes Trust',
-      deadline: '2024-09-30',
-      amount: '$70,000',
+      id: '2', 
+      title: 'Chevening UK Scholarship',
+      university: 'Oxford, Cambridge, LSE',
+      country: 'United Kingdom',
+      deadline: '2024-11-07',
+      amount: '£18,000 + tuition',
       status: 'applied',
-      match: 87
+      matchPercentage: 88,
+      requirements: ['Leadership experience', 'IELTS 6.5+', 'Work experience', 'Essay']
     },
     {
-      id: 3,
-      title: 'Gates Cambridge Scholarship',
-      provider: 'Gates Cambridge Trust',
-      deadline: '2024-12-05',
-      amount: '$60,000',
-      status: 'draft',
-      match: 92
+      id: '3',
+      title: 'DAAD German Scholarships',
+      university: 'Max Planck Institute',
+      country: 'Germany',
+      deadline: '2024-10-31',
+      amount: '€934/month',
+      status: 'saved',
+      matchPercentage: 85,
+      requirements: ['Research focus', 'German B2', 'Academic excellence']
+    },
+    {
+      id: '4',
+      title: 'Australia Awards Scholarship',
+      university: 'University of Melbourne',
+      country: 'Australia',
+      deadline: '2024-09-30',
+      amount: 'Full tuition + living',
+      status: 'accepted',
+      matchPercentage: 94,
+      requirements: ['Development focus', 'IELTS 6.5+', 'Leadership potential']
     }
   ];
 
-  const applications = [
+  const applications: Application[] = [
     {
-      id: 1,
-      scholarship: 'Fulbright Program',
-      status: 'in_progress',
-      completion: 75,
-      deadline: '2024-10-15'
-    },
-    {
-      id: 2,
-      scholarship: 'Rhodes Scholarship', 
+      id: '1',
+      scholarship: 'MIT EECS PhD Program',
+      university: 'Massachusetts Institute of Technology',
       status: 'submitted',
-      completion: 100,
-      deadline: '2024-09-30'
+      progress: 85,
+      nextStep: 'Wait for interview invitation',
+      deadline: '2024-12-01',
+      documents: [
+        { name: 'Personal Statement', status: 'completed' },
+        { name: 'Transcripts', status: 'completed' },
+        { name: 'Letters of Recommendation', status: 'pending' },
+        { name: 'GRE Scores', status: 'completed' }
+      ]
+    },
+    {
+      id: '2',
+      scholarship: 'Stanford AI Fellowship',
+      university: 'Stanford University',
+      status: 'in_progress',
+      progress: 60,
+      nextStep: 'Submit research proposal',
+      deadline: '2024-11-15',
+      documents: [
+        { name: 'Research Proposal', status: 'in_progress' },
+        { name: 'CV/Resume', status: 'completed' },
+        { name: 'Portfolio', status: 'draft' }
+      ]
     }
   ];
 
-  const mentors = [
+  const mentors: Mentor[] = [
     {
-      id: 1,
-      name: 'Dr. Sarah Johnson',
-      field: 'International Relations',
-      university: 'Harvard University',
+      id: '1',
+      name: 'Dr. Alemayehu Tadesse',
+      title: 'Professor of Computer Science',
+      university: 'MIT',
+      expertise: ['Machine Learning', 'Research Methods', 'Academic Writing'],
       rating: 4.9,
-      sessions: 12
+      avatar: '/placeholder-mentor1.jpg',
+      nextSession: '2024-10-20 15:00',
+      isOnline: true
     },
     {
-      id: 2,
-      name: 'Michael Chen',
-      field: 'Computer Science',
-      university: 'MIT',
+      id: '2',
+      name: 'Sarah Johnson, PhD',
+      title: 'Senior Research Scientist',
+      university: 'Stanford',
+      expertise: ['Career Planning', 'Interview Prep', 'Networking'],
       rating: 4.8,
-      sessions: 8
+      avatar: '/placeholder-mentor2.jpg',
+      isOnline: false
     }
   ];
+
+  const studentStats = {
+    totalApplications: 12,
+    activeScholarships: 47,
+    successRate: 75,
+    mentorSessions: 8,
+    documentsCompleted: 23,
+    upcomingDeadlines: 5
+  };
 
   const achievements = [
     { title: 'Profile Completed', completed: true, points: 100 },
@@ -89,257 +181,345 @@ const EnhancedStudentDashboard: React.FC = () => {
     { title: 'Essay Submitted', completed: false, points: 250 }
   ];
 
-  const handleHomeClick = () => {
-    // Stay on student dashboard, don't go to main landing page
-    setActiveTab('dashboard');
-    // Scroll to top to show the dashboard content
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+  if (showInfo) {
+    return (
+      <div className="min-h-screen bg-background">
+        <div className="border-b bg-card/50 backdrop-blur-sm sticky top-0 z-50">
+          <div className="container mx-auto px-4 lg:px-6 py-4">
+            <Button 
+              variant="outline" 
+              onClick={() => setShowInfo(false)}
+              className="mb-4"
+            >
+              ← Back to Dashboard
+            </Button>
+          </div>
+        </div>
+        <InfoSection userType="student" />
+      </div>
+    );
+  }
+
+  const getStatusColor = (status: string) => {
+    switch (status) {
+      case 'eligible': return 'bg-green-100 text-green-800';
+      case 'applied': return 'bg-blue-100 text-blue-800';
+      case 'saved': return 'bg-gray-100 text-gray-800';
+      case 'accepted': return 'bg-emerald-100 text-emerald-800';
+      case 'rejected': return 'bg-red-100 text-red-800';
+      case 'submitted': return 'bg-indigo-100 text-indigo-800';
+      case 'in_progress': return 'bg-yellow-100 text-yellow-800';
+      case 'under_review': return 'bg-purple-100 text-purple-800';
+      default: return 'bg-gray-100 text-gray-800';
+    }
   };
 
   return (
-    <div className="min-h-screen bg-background">
-      {/* Header */}
-      <header className="border-b bg-card/50 backdrop-blur-sm sticky top-0 z-50">
-        <div className="container mx-auto px-6 py-4">
+    <div className="min-h-screen bg-gradient-to-br from-background via-background to-accent/5">
+      {/* Mobile-optimized header */}
+      <header className="border-b bg-card/80 backdrop-blur-md sticky top-0 z-50">
+        <div className="container mx-auto px-4 lg:px-6 py-4">
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-6">
-              <div className="flex items-center gap-3">
-                <img 
-                  src="/lovable-uploads/8100b743-8748-46c8-952a-e50f9e5f88e0.png" 
-                  alt="Negari Logo" 
-                  className="h-10 w-10"
-                />
-                <span className="font-comfortaa font-bold text-xl text-primary">Negari</span>
-                <Badge variant="secondary">Student Portal</Badge>
-              </div>
-              
-              {/* Navigation */}
-              <nav className="hidden md:flex items-center gap-4">
-                <Button 
-                  variant={activeTab === 'dashboard' ? 'default' : 'ghost'} 
-                  size="sm" 
-                  onClick={handleHomeClick}
-                  className="gap-2"
-                >
-                  <Home className="h-4 w-4" />
-                  Home
-                </Button>
-                <Button 
-                  variant={activeTab === 'scholarships' ? 'default' : 'ghost'} 
-                  size="sm" 
-                  onClick={() => setActiveTab('scholarships')}
-                  className="gap-2"
-                >
-                  <Target className="h-4 w-4" />
-                  Scholarships
-                </Button>
-                <Button 
-                  variant={activeTab === 'applications' ? 'default' : 'ghost'} 
-                  size="sm" 
-                  onClick={() => setActiveTab('applications')}
-                  className="gap-2"
-                >
-                  <FileText className="h-4 w-4" />
-                  Applications
-                </Button>
-                <Button 
-                  variant={activeTab === 'mentors' ? 'default' : 'ghost'} 
-                  size="sm" 
-                  onClick={() => setActiveTab('mentors')}
-                  className="gap-2"
-                >
-                  <Users className="h-4 w-4" />
-                  Mentors
-                </Button>
-                <Button 
-                  variant={activeTab === 'info' ? 'default' : 'ghost'} 
-                  size="sm" 
-                  onClick={() => setActiveTab('info')}
-                  className="gap-2"
-                >
-                  <Info className="h-4 w-4" />
-                  Info
-                </Button>
-              </nav>
-            </div>
-            
             <div className="flex items-center gap-3">
-              <Button variant="ghost" size="sm">
+              <img 
+                src="/lovable-uploads/8100b743-8748-46c8-952a-e50f9e5f88e0.png" 
+                alt="Negari Logo" 
+                className="h-8 w-8 lg:h-10 lg:w-10"
+              />
+              <div>
+                <h1 className="font-comfortaa font-bold text-lg lg:text-xl text-primary">Student Portal</h1>
+                <p className="text-xs lg:text-sm text-muted-foreground hidden sm:block">Welcome back, Almaz!</p>
+              </div>
+            </div>
+            <div className="flex items-center gap-2 lg:gap-3">
+              <Button variant="ghost" size="sm" className="relative">
                 <Bell className="h-4 w-4" />
+                <span className="absolute -top-1 -right-1 h-3 w-3 bg-destructive rounded-full text-xs"></span>
               </Button>
-              <Button variant="ghost" size="sm">
-                <Settings className="h-4 w-4" />
+              <Button 
+                variant="outline" 
+                size="sm" 
+                onClick={() => setShowInfo(true)}
+                className="hidden sm:inline-flex"
+              >
+                <Info className="h-4 w-4 lg:mr-2" />
+                {!isMobile && 'Info'}
               </Button>
-              <Button variant="ghost" size="sm">
-                <User className="h-4 w-4" />
-              </Button>
+              <Avatar className="h-8 w-8">
+                <AvatarImage src="/placeholder-student.jpg" />
+                <AvatarFallback>AT</AvatarFallback>
+              </Avatar>
             </div>
           </div>
         </div>
       </header>
 
-      <div className="container mx-auto px-6 py-8">
-        <Tabs value={activeTab} onValueChange={setActiveTab}>
+      <div className="container mx-auto px-4 lg:px-6 py-4 lg:py-8 mobile-safe-area">
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
+          <div className="border-b">
+            <TabsList className={`grid w-full ${isMobile ? 'grid-cols-3' : 'grid-cols-6'} gap-1`}>
+              <TabsTrigger value="dashboard" className="text-xs lg:text-sm">
+                {isMobile ? <Home className="h-4 w-4" /> : 'Dashboard'}
+              </TabsTrigger>
+              <TabsTrigger value="scholarships" className="text-xs lg:text-sm">
+                {isMobile ? <Award className="h-4 w-4" /> : 'Scholarships'}
+              </TabsTrigger>
+              <TabsTrigger value="applications" className="text-xs lg:text-sm">
+                {isMobile ? <FileText className="h-4 w-4" /> : 'Applications'}
+              </TabsTrigger>
+              {!isMobile && (
+                <>
+                  <TabsTrigger value="mentors">Mentors</TabsTrigger>
+                  <TabsTrigger value="progress">Progress</TabsTrigger>
+                  <TabsTrigger value="resources">Resources</TabsTrigger>
+                </>
+              )}
+            </TabsList>
+          </div>
+
           {/* Dashboard Tab */}
           <TabsContent value="dashboard" className="space-y-6">
-            <div className="flex items-center justify-between">
+            {/* Welcome Section */}
+            <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
               <div>
-                <h1 className="text-3xl font-comfortaa font-bold text-primary">Welcome back, Student!</h1>
+                <h1 className="text-2xl lg:text-3xl font-comfortaa font-bold text-primary">Welcome back, Almaz!</h1>
                 <p className="text-muted-foreground">Continue your journey to global education</p>
               </div>
               <div className="flex gap-3">
                 <Button className="gap-2">
                   <Search className="h-4 w-4" />
-                  Find Scholarships
+                  {!isMobile && 'Find Scholarships'}
                 </Button>
               </div>
             </div>
 
-            {/* Quick Stats */}
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-              <Card>
-                <CardContent className="p-6">
-                  <div className="flex items-center gap-4">
-                    <div className="p-3 bg-primary/10 rounded-full">
-                      <Target className="h-5 w-5 text-primary" />
-                    </div>
-                    <div>
-                      <p className="text-2xl font-bold text-primary">12</p>
-                      <p className="text-sm text-muted-foreground">Available Scholarships</p>
-                    </div>
-                  </div>
+            {/* Stats Grid - Mobile Responsive */}
+            <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-3 lg:gap-6">
+              <Card className="hover:shadow-lg transition-all duration-300">
+                <CardHeader className="pb-2">
+                  <CardTitle className="text-xs lg:text-sm font-medium">Applications</CardTitle>
+                </CardHeader>
+                <CardContent className="pt-0">
+                  <div className="text-xl lg:text-2xl font-bold text-primary">{studentStats.totalApplications}</div>
+                  <p className="text-xs text-muted-foreground">+2 this month</p>
                 </CardContent>
               </Card>
-              
-              <Card>
-                <CardContent className="p-6">
-                  <div className="flex items-center gap-4">
-                    <div className="p-3 bg-secondary/10 rounded-full">
-                      <FileText className="h-5 w-5 text-secondary" />
-                    </div>
-                    <div>
-                      <p className="text-2xl font-bold text-primary">3</p>
-                      <p className="text-sm text-muted-foreground">Active Applications</p>
-                    </div>
-                  </div>
+
+              <Card className="hover:shadow-lg transition-all duration-300">
+                <CardHeader className="pb-2">
+                  <CardTitle className="text-xs lg:text-sm font-medium">Scholarships</CardTitle>
+                </CardHeader>
+                <CardContent className="pt-0">
+                  <div className="text-xl lg:text-2xl font-bold text-secondary">{studentStats.activeScholarships}</div>
+                  <p className="text-xs text-muted-foreground">Available</p>
                 </CardContent>
               </Card>
-              
-              <Card>
-                <CardContent className="p-6">
-                  <div className="flex items-center gap-4">
-                    <div className="p-3 bg-accent/10 rounded-full">
-                      <Users className="h-5 w-5 text-accent" />
-                    </div>
-                    <div>
-                      <p className="text-2xl font-bold text-primary">2</p>
-                      <p className="text-sm text-muted-foreground">Active Mentors</p>
-                    </div>
-                  </div>
+
+              <Card className="hover:shadow-lg transition-all duration-300">
+                <CardHeader className="pb-2">
+                  <CardTitle className="text-xs lg:text-sm font-medium">Success Rate</CardTitle>
+                </CardHeader>
+                <CardContent className="pt-0">
+                  <div className="text-xl lg:text-2xl font-bold text-green-600">{studentStats.successRate}%</div>
+                  <p className="text-xs text-muted-foreground">Above average</p>
                 </CardContent>
               </Card>
-              
-              <Card>
-                <CardContent className="p-6">
-                  <div className="flex items-center gap-4">
-                    <div className="p-3 bg-primary/10 rounded-full">
-                      <Award className="h-5 w-5 text-primary" />
-                    </div>
-                    <div>
-                      <p className="text-2xl font-bold text-primary">750</p>
-                      <p className="text-sm text-muted-foreground">Points Earned</p>
-                    </div>
-                  </div>
+
+              <Card className="hover:shadow-lg transition-all duration-300">
+                <CardHeader className="pb-2">
+                  <CardTitle className="text-xs lg:text-sm font-medium">Mentors</CardTitle>
+                </CardHeader>
+                <CardContent className="pt-0">
+                  <div className="text-xl lg:text-2xl font-bold text-purple-600">{studentStats.mentorSessions}</div>
+                  <p className="text-xs text-muted-foreground">Sessions</p>
+                </CardContent>
+              </Card>
+
+              <Card className="hover:shadow-lg transition-all duration-300">
+                <CardHeader className="pb-2">
+                  <CardTitle className="text-xs lg:text-sm font-medium">Documents</CardTitle>
+                </CardHeader>
+                <CardContent className="pt-0">
+                  <div className="text-xl lg:text-2xl font-bold text-accent">{studentStats.documentsCompleted}</div>
+                  <p className="text-xs text-muted-foreground">Completed</p>
+                </CardContent>
+              </Card>
+
+              <Card className="hover:shadow-lg transition-all duration-300">
+                <CardHeader className="pb-2">
+                  <CardTitle className="text-xs lg:text-sm font-medium">Deadlines</CardTitle>
+                </CardHeader>
+                <CardContent className="pt-0">
+                  <div className="text-xl lg:text-2xl font-bold text-orange-600">{studentStats.upcomingDeadlines}</div>
+                  <p className="text-xs text-muted-foreground">This month</p>
                 </CardContent>
               </Card>
             </div>
 
-            {/* Recent Activity & Progress */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              <Card>
+            {/* Quick Actions & Recent Activity */}
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+              {/* Quick Actions */}
+              <Card className="lg:col-span-1">
                 <CardHeader>
-                  <CardTitle>Application Progress</CardTitle>
+                  <CardTitle className="flex items-center gap-2">
+                    <Target className="h-5 w-5" />
+                    Quick Actions
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-3">
+                  <Button className="w-full justify-start" variant="outline">
+                    <Search className="h-4 w-4 mr-2" />
+                    Find Scholarships
+                  </Button>
+                  <Button className="w-full justify-start" variant="outline">
+                    <FileText className="h-4 w-4 mr-2" />
+                    Continue Application
+                  </Button>
+                  <Button className="w-full justify-start" variant="outline">
+                    <Calendar className="h-4 w-4 mr-2" />
+                    Schedule Mentor Call
+                  </Button>
+                  <Button className="w-full justify-start" variant="outline">
+                    <Download className="h-4 w-4 mr-2" />
+                    Download Documents
+                  </Button>
+                </CardContent>
+              </Card>
+
+              {/* Recent Applications */}
+              <Card className="lg:col-span-2">
+                <CardHeader>
+                  <CardTitle>Recent Applications</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
-                  {applications.map((app) => (
-                    <div key={app.id} className="space-y-2">
-                      <div className="flex justify-between items-center">
-                        <span className="font-medium">{app.scholarship}</span>
-                        <Badge variant={app.status === 'submitted' ? 'default' : 'secondary'}>
-                          {app.status === 'submitted' ? 'Submitted' : 'In Progress'}
+                  {applications.slice(0, 3).map((app) => (
+                    <div key={app.id} className="flex items-center justify-between p-4 border rounded-lg hover:bg-muted/50 transition-colors">
+                      <div className="flex-1 min-w-0">
+                        <p className="font-medium text-sm lg:text-base truncate">{app.scholarship}</p>
+                        <p className="text-xs lg:text-sm text-muted-foreground">{app.university}</p>
+                        <div className="mt-2">
+                          <div className="flex items-center justify-between text-xs">
+                            <span>Progress</span>
+                            <span>{app.progress}%</span>
+                          </div>
+                          <Progress value={app.progress} className="h-2 mt-1" />
+                        </div>
+                      </div>
+                      <div className="ml-4 flex flex-col items-end gap-2">
+                        <Badge className={getStatusColor(app.status)}>
+                          {app.status}
                         </Badge>
+                        <Button size="sm" variant="ghost">
+                          <ChevronRight className="h-4 w-4" />
+                        </Button>
                       </div>
-                      <div className="flex justify-between text-sm text-muted-foreground">
-                        <span>{app.completion}% complete</span>
-                        <span>Due: {app.deadline}</span>
-                      </div>
-                      <Progress value={app.completion} className="h-2" />
                     </div>
                   ))}
                 </CardContent>
               </Card>
+            </div>
 
-              <Card>
-                <CardHeader>
-                  <CardTitle>Achievement Progress</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4">
+            {/* Achievement Progress */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Award className="h-5 w-5" />
+                  Achievement Progress
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="grid grid-cols-1 lg:grid-cols-4 gap-4">
                   {achievements.map((achievement, index) => (
-                    <div key={index} className="flex items-center gap-3">
+                    <div key={index} className="flex items-center gap-3 p-3 bg-muted/30 rounded-lg">
                       <div className={`p-2 rounded-full ${achievement.completed ? 'bg-secondary text-white' : 'bg-muted'}`}>
-                        {achievement.completed ? <Award className="h-4 w-4" /> : <Clock className="h-4 w-4" />}
+                        {achievement.completed ? <CheckCircle className="h-4 w-4" /> : <Clock className="h-4 w-4" />}
                       </div>
                       <div className="flex-1">
-                        <p className="font-medium">{achievement.title}</p>
-                        <p className="text-sm text-muted-foreground">+{achievement.points} points</p>
+                        <p className="font-medium text-sm">{achievement.title}</p>
+                        <p className="text-xs text-muted-foreground">+{achievement.points} points</p>
                       </div>
                     </div>
                   ))}
-                </CardContent>
-              </Card>
-            </div>
+                </div>
+              </CardContent>
+            </Card>
           </TabsContent>
 
           {/* Scholarships Tab */}
           <TabsContent value="scholarships" className="space-y-6">
-            <div className="flex items-center justify-between">
-              <h2 className="text-2xl font-comfortaa font-bold text-primary">Scholarship Explorer</h2>
-              <div className="flex gap-3">
-                <Input placeholder="Search scholarships..." className="w-64" />
-                <Button>Search</Button>
+            <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+              <div>
+                <h2 className="text-2xl font-bold text-primary">Scholarship Explorer</h2>
+                <p className="text-muted-foreground">Discover opportunities tailored to your profile</p>
+              </div>
+              <div className="flex items-center gap-3">
+                <div className="relative flex-1 lg:w-80">
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                  <Input placeholder="Search scholarships..." className="pl-10" />
+                </div>
+                <Button variant="outline" size={isMobile ? "sm" : "default"}>
+                  <Filter className="h-4 w-4 lg:mr-2" />
+                  {!isMobile && 'Filter'}
+                </Button>
               </div>
             </div>
 
-            <div className="grid gap-6">
+            <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
               {scholarships.map((scholarship) => (
-                <Card key={scholarship.id} className="hover:shadow-lg transition-shadow">
-                  <CardHeader>
-                    <div className="flex justify-between items-start">
-                      <div>
-                        <CardTitle className="text-xl">{scholarship.title}</CardTitle>
-                        <p className="text-muted-foreground">{scholarship.provider}</p>
+                <Card key={scholarship.id} className="hover:shadow-xl transition-all duration-300 group">
+                  <CardHeader className="pb-4">
+                    <div className="flex items-start justify-between">
+                      <div className="flex-1 min-w-0">
+                        <CardTitle className="text-lg truncate">{scholarship.title}</CardTitle>
+                        <p className="text-sm text-muted-foreground mt-1">{scholarship.university}</p>
+                        <div className="flex items-center gap-2 mt-2">
+                          <Globe className="h-4 w-4 text-muted-foreground" />
+                          <span className="text-sm">{scholarship.country}</span>
+                        </div>
                       </div>
-                      <div className="text-right">
-                        <p className="text-2xl font-bold text-primary">{scholarship.amount}</p>
-                        <Badge variant={scholarship.status === 'applied' ? 'default' : 'secondary'}>
-                          {scholarship.match}% match
-                        </Badge>
-                      </div>
+                      <Badge className={getStatusColor(scholarship.status)}>
+                        {scholarship.status}
+                      </Badge>
                     </div>
                   </CardHeader>
-                  <CardContent>
-                    <div className="flex justify-between items-center">
-                      <div className="flex items-center gap-4">
-                        <div className="flex items-center gap-1">
-                          <Calendar className="h-4 w-4 text-muted-foreground" />
-                          <span className="text-sm">Deadline: {scholarship.deadline}</span>
-                        </div>
-                        <Badge variant={scholarship.status === 'open' ? 'secondary' : 'default'}>
-                          {scholarship.status === 'open' ? 'Open' : scholarship.status === 'applied' ? 'Applied' : 'Draft'}
-                        </Badge>
+                  <CardContent className="space-y-4">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="text-lg font-bold text-primary">{scholarship.amount}</p>
+                        <p className="text-xs text-muted-foreground">Funding amount</p>
                       </div>
-                      <Button size="sm">
-                        {scholarship.status === 'open' ? 'Apply Now' : 'View Details'}
+                      <div className="text-right">
+                        <p className="text-sm font-semibold text-green-600">{scholarship.matchPercentage}% match</p>
+                        <p className="text-xs text-muted-foreground">Due: {scholarship.deadline}</p>
+                      </div>
+                    </div>
+                    
+                    <div className="space-y-2">
+                      <p className="text-sm font-medium">Requirements:</p>
+                      <div className="flex flex-wrap gap-1">
+                        {scholarship.requirements.slice(0, 3).map((req, idx) => (
+                          <Badge key={idx} variant="outline" className="text-xs">
+                            {req}
+                          </Badge>
+                        ))}
+                        {scholarship.requirements.length > 3 && (
+                          <Badge variant="outline" className="text-xs">
+                            +{scholarship.requirements.length - 3} more
+                          </Badge>
+                        )}
+                      </div>
+                    </div>
+                    
+                    <div className="flex gap-2 pt-2">
+                      <Button size="sm" className="flex-1 group-hover:scale-105 transition-transform">
+                        <Eye className="h-4 w-4 mr-2" />
+                        View Details
+                      </Button>
+                      <Button size="sm" variant="outline" disabled={scholarship.status === 'applied'}>
+                        {scholarship.status === 'applied' ? 'Applied' : 'Apply'}
+                      </Button>
+                      <Button size="sm" variant="ghost">
+                        <Star className="h-4 w-4" />
                       </Button>
                     </div>
                   </CardContent>
@@ -350,81 +530,72 @@ const EnhancedStudentDashboard: React.FC = () => {
 
           {/* Applications Tab */}
           <TabsContent value="applications" className="space-y-6">
-            <h2 className="text-2xl font-comfortaa font-bold text-primary">My Applications</h2>
-            
-            <div className="grid gap-6">
+            <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+              <h2 className="text-2xl font-bold text-primary">My Applications</h2>
+              <Button>
+                <Plus className="h-4 w-4 mr-2" />
+                New Application
+              </Button>
+            </div>
+
+            <div className="space-y-4">
               {applications.map((app) => (
-                <Card key={app.id}>
-                  <CardHeader>
-                    <div className="flex justify-between items-center">
-                      <CardTitle>{app.scholarship}</CardTitle>
-                      <Badge variant={app.status === 'submitted' ? 'default' : 'secondary'}>
-                        {app.status === 'submitted' ? 'Submitted' : 'In Progress'}
-                      </Badge>
-                    </div>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="space-y-4">
-                      <div>
-                        <div className="flex justify-between mb-2">
-                          <span>Completion Progress</span>
-                          <span>{app.completion}%</span>
+                <Card key={app.id} className="hover:shadow-lg transition-all duration-300">
+                  <CardContent className="p-6">
+                    <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+                      <div className="flex-1 min-w-0">
+                        <h3 className="text-lg font-semibold">{app.scholarship}</h3>
+                        <p className="text-sm text-muted-foreground">{app.university}</p>
+                        <p className="text-sm text-muted-foreground mt-1">Deadline: {app.deadline}</p>
+                      </div>
+                      <div className="flex items-center gap-3">
+                        <Badge className={getStatusColor(app.status)}>
+                          {app.status.replace('_', ' ')}
+                        </Badge>
+                        <div className="flex gap-2">
+                          <Button size="sm" variant="outline">
+                            <Edit className="h-4 w-4" />
+                          </Button>
+                          <Button size="sm" variant="outline">
+                            <Eye className="h-4 w-4" />
+                          </Button>
+                          <Button size="sm" variant="outline">
+                            <Share2 className="h-4 w-4" />
+                          </Button>
                         </div>
-                        <Progress value={app.completion} className="h-2" />
-                      </div>
-                      <div className="flex justify-between items-center">
-                        <span className="text-sm text-muted-foreground">
-                          Deadline: {app.deadline}
-                        </span>
-                        <Button size="sm">
-                          {app.status === 'submitted' ? 'View Application' : 'Continue'}
-                        </Button>
                       </div>
                     </div>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-          </TabsContent>
-
-          {/* Mentors Tab */}
-          <TabsContent value="mentors" className="space-y-6">
-            <h2 className="text-2xl font-comfortaa font-bold text-primary">My Mentors</h2>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {mentors.map((mentor) => (
-                <Card key={mentor.id}>
-                  <CardHeader>
-                    <div className="flex items-center gap-4">
-                      <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center">
-                        <User className="h-6 w-6 text-primary" />
-                      </div>
+                    
+                    <div className="mt-6 space-y-4">
                       <div>
-                        <CardTitle className="text-lg">{mentor.name}</CardTitle>
-                        <p className="text-muted-foreground">{mentor.field}</p>
-                        <p className="text-sm text-muted-foreground">{mentor.university}</p>
+                        <div className="flex items-center justify-between text-sm mb-2">
+                          <span className="font-medium">Overall Progress</span>
+                          <span className="font-semibold">{app.progress}%</span>
+                        </div>
+                        <Progress value={app.progress} className="h-3" />
+                        <p className="text-sm text-muted-foreground mt-2">
+                          Next step: {app.nextStep}
+                        </p>
                       </div>
-                    </div>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="flex justify-between items-center mb-4">
-                      <div className="flex items-center gap-1">
-                        <Star className="h-4 w-4 text-yellow-500 fill-current" />
-                        <span className="font-medium">{mentor.rating}</span>
+                      
+                      <div>
+                        <p className="text-sm font-medium mb-3">Documents Status:</p>
+                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
+                          {app.documents.map((doc, idx) => (
+                            <div key={idx} className="flex items-center justify-between p-2 bg-muted/30 rounded">
+                              <span className="text-sm">{doc.name}</span>
+                              <Badge variant="outline" className={
+                                doc.status === 'completed' ? 'bg-green-100 text-green-800' :
+                                doc.status === 'in_progress' ? 'bg-yellow-100 text-yellow-800' :
+                                doc.status === 'pending' ? 'bg-red-100 text-red-800' :
+                                'bg-gray-100 text-gray-800'
+                              }>
+                                {doc.status}
+                              </Badge>
+                            </div>
+                          ))}
+                        </div>
                       </div>
-                      <span className="text-sm text-muted-foreground">
-                        {mentor.sessions} sessions completed
-                      </span>
-                    </div>
-                    <div className="flex gap-2">
-                      <Button size="sm" className="flex-1">
-                        <MessageCircle className="h-4 w-4 mr-2" />
-                        Message
-                      </Button>
-                      <Button size="sm" variant="outline">
-                        <Calendar className="h-4 w-4 mr-2" />
-                        Schedule
-                      </Button>
                     </div>
                   </CardContent>
                 </Card>
@@ -432,102 +603,255 @@ const EnhancedStudentDashboard: React.FC = () => {
             </div>
           </TabsContent>
 
-          {/* Info Tab */}
-          <TabsContent value="info" className="space-y-6">
-            <h2 className="text-2xl font-comfortaa font-bold text-primary">Student Information Center</h2>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <BookOpen className="h-5 w-5" />
-                    Study Guides
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-muted-foreground mb-4">
-                    Comprehensive guides for scholarship applications, essay writing, and interview preparation.
-                  </p>
-                  <Button size="sm" className="w-full">Browse Guides</Button>
-                </CardContent>
-              </Card>
+          {/* Desktop-only tabs */}
+          {!isMobile && (
+            <>
+              <TabsContent value="mentors" className="space-y-6">
+                <div className="flex items-center justify-between">
+                  <h2 className="text-2xl font-bold text-primary">Mentor Network</h2>
+                  <Button>
+                    <Users className="h-4 w-4 mr-2" />
+                    Find Mentor
+                  </Button>
+                </div>
 
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <GraduationCap className="h-5 w-5" />
-                    University Database
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-muted-foreground mb-4">
-                    Explore universities worldwide, their programs, requirements, and student experiences.
-                  </p>
-                  <Button size="sm" className="w-full">Explore Universities</Button>
-                </CardContent>
-              </Card>
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                  {mentors.map((mentor) => (
+                    <Card key={mentor.id} className="hover:shadow-lg transition-all duration-300">
+                      <CardContent className="p-6">
+                        <div className="flex items-start gap-4">
+                          <div className="relative">
+                            <Avatar className="h-16 w-16">
+                              <AvatarImage src={mentor.avatar} />
+                              <AvatarFallback>{mentor.name.split(' ').map(n => n[0]).join('')}</AvatarFallback>
+                            </Avatar>
+                            {mentor.isOnline && (
+                              <div className="absolute -bottom-1 -right-1 h-5 w-5 bg-green-500 border-2 border-white rounded-full"></div>
+                            )}
+                          </div>
+                          
+                          <div className="flex-1 min-w-0">
+                            <h3 className="text-lg font-semibold">{mentor.name}</h3>
+                            <p className="text-muted-foreground">{mentor.title}</p>
+                            <p className="text-sm text-muted-foreground">{mentor.university}</p>
+                            <div className="flex items-center gap-1 mt-2">
+                              {[1,2,3,4,5].map(star => (
+                                <Star key={star} className={`h-4 w-4 ${star <= mentor.rating ? 'text-yellow-500 fill-current' : 'text-gray-300'}`} />
+                              ))}
+                              <span className="text-sm ml-2">{mentor.rating}</span>
+                            </div>
+                          </div>
+                        </div>
+                        
+                        <div className="mt-4">
+                          <p className="text-sm font-medium mb-2">Expertise:</p>
+                          <div className="flex flex-wrap gap-2">
+                            {mentor.expertise.map((skill, idx) => (
+                              <Badge key={idx} variant="outline">
+                                {skill}
+                              </Badge>
+                            ))}
+                          </div>
+                        </div>
+                        
+                        {mentor.nextSession && (
+                          <div className="mt-4 p-3 bg-blue-50 rounded-lg">
+                            <p className="text-sm font-medium">Next Session</p>
+                            <p className="text-sm text-muted-foreground">{mentor.nextSession}</p>
+                          </div>
+                        )}
+                        
+                        <div className="flex gap-2 mt-4">
+                          <Button className="flex-1">
+                            <MessageCircle className="h-4 w-4 mr-2" />
+                            Message
+                          </Button>
+                          <Button variant="outline">
+                            <Video className="h-4 w-4 mr-2" />
+                            Call
+                          </Button>
+                          <Button variant="outline">
+                            <Calendar className="h-4 w-4 mr-2" />
+                            Schedule
+                          </Button>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
+              </TabsContent>
 
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <TrendingUp className="h-5 w-5" />
-                    Success Stories
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-muted-foreground mb-4">
-                    Read inspiring stories from Ethiopian students who successfully studied abroad.
-                  </p>
-                  <Button size="sm" className="w-full">Read Stories</Button>
-                </CardContent>
-              </Card>
+              <TabsContent value="progress" className="space-y-6">
+                <h2 className="text-2xl font-bold text-primary">Progress & Analytics</h2>
+                
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                  <Card>
+                    <CardHeader>
+                      <CardTitle>Monthly Goals</CardTitle>
+                    </CardHeader>
+                    <CardContent className="space-y-4">
+                      <div className="space-y-2">
+                        <div className="flex justify-between">
+                          <span>Applications Submitted</span>
+                          <span className="font-semibold">3/5</span>
+                        </div>
+                        <Progress value={60} />
+                      </div>
+                      <div className="space-y-2">
+                        <div className="flex justify-between">
+                          <span>Essays Completed</span>
+                          <span className="font-semibold">7/10</span>
+                        </div>
+                        <Progress value={70} />
+                      </div>
+                      <div className="space-y-2">
+                        <div className="flex justify-between">
+                          <span>Mentor Sessions</span>
+                          <span className="font-semibold">8/12</span>
+                        </div>
+                        <Progress value={67} />
+                      </div>
+                    </CardContent>
+                  </Card>
 
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <Calendar className="h-5 w-5" />
-                    Important Dates
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-muted-foreground mb-4">
-                    Keep track of scholarship deadlines, test dates, and application timelines.
-                  </p>
-                  <Button size="sm" className="w-full">View Calendar</Button>
-                </CardContent>
-              </Card>
+                  <Card>
+                    <CardHeader>
+                      <CardTitle>Achievement Timeline</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="space-y-4">
+                        <div className="flex items-center gap-3">
+                          <CheckCircle className="h-5 w-5 text-green-600" />
+                          <div>
+                            <p className="font-medium">Profile Completed</p>
+                            <p className="text-sm text-muted-foreground">2 weeks ago</p>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-3">
+                          <CheckCircle className="h-5 w-5 text-green-600" />
+                          <div>
+                            <p className="font-medium">First Application Submitted</p>
+                            <p className="text-sm text-muted-foreground">1 week ago</p>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-3">
+                          <Clock className="h-5 w-5 text-muted-foreground" />
+                          <div>
+                            <p className="font-medium">Interview Preparation</p>
+                            <p className="text-sm text-muted-foreground">In progress</p>
+                          </div>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
 
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <FileText className="h-5 w-5" />
-                    Document Templates
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-muted-foreground mb-4">
-                    Download templates for personal statements, recommendation letters, and more.
-                  </p>
-                  <Button size="sm" className="w-full">Download Templates</Button>
-                </CardContent>
-              </Card>
+                  <Card>
+                    <CardHeader>
+                      <CardTitle>Performance Metrics</CardTitle>
+                    </CardHeader>
+                    <CardContent className="space-y-4">
+                      <div className="text-center">
+                        <div className="text-3xl font-bold text-green-600">75%</div>
+                        <p className="text-sm text-muted-foreground">Success Rate</p>
+                      </div>
+                      <div className="text-center">
+                        <div className="text-2xl font-bold text-blue-600">12</div>
+                        <p className="text-sm text-muted-foreground">Active Applications</p>
+                      </div>
+                      <div className="text-center">
+                        <div className="text-2xl font-bold text-purple-600">47</div>
+                        <p className="text-sm text-muted-foreground">Scholarships Matched</p>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </div>
+              </TabsContent>
 
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <MessageCircle className="h-5 w-5" />
-                    Community Forum
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-muted-foreground mb-4">
-                    Connect with other Ethiopian students, ask questions, and share experiences.
-                  </p>
-                  <Button size="sm" className="w-full">Join Discussion</Button>
-                </CardContent>
-              </Card>
-            </div>
-          </TabsContent>
+              <TabsContent value="resources" className="space-y-6">
+                <h2 className="text-2xl font-bold text-primary">Learning Resources</h2>
+                
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  <Card className="hover:shadow-lg transition-shadow">
+                    <CardHeader>
+                      <CardTitle className="flex items-center gap-2">
+                        <BookOpen className="h-5 w-5 text-blue-500" />
+                        Study Guides
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <p className="text-muted-foreground mb-4">Comprehensive study materials for standardized tests</p>
+                      <Button className="w-full">Access Guides</Button>
+                    </CardContent>
+                  </Card>
+
+                  <Card className="hover:shadow-lg transition-shadow">
+                    <CardHeader>
+                      <CardTitle className="flex items-center gap-2">
+                        <Video className="h-5 w-5 text-red-500" />
+                        Video Tutorials
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <p className="text-muted-foreground mb-4">Step-by-step application and interview preparation</p>
+                      <Button className="w-full" variant="outline">Watch Videos</Button>
+                    </CardContent>
+                  </Card>
+
+                  <Card className="hover:shadow-lg transition-shadow">
+                    <CardHeader>
+                      <CardTitle className="flex items-center gap-2">
+                        <FileText className="h-5 w-5 text-green-500" />
+                        Essay Templates
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <p className="text-muted-foreground mb-4">Professional templates for personal statements</p>
+                      <Button className="w-full" variant="outline">Download Templates</Button>
+                    </CardContent>
+                  </Card>
+
+                  <Card className="hover:shadow-lg transition-shadow">
+                    <CardHeader>
+                      <CardTitle className="flex items-center gap-2">
+                        <Users className="h-5 w-5 text-purple-500" />
+                        Community Forum
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <p className="text-muted-foreground mb-4">Connect with fellow students and share experiences</p>
+                      <Button className="w-full" variant="outline">Join Community</Button>
+                    </CardContent>
+                  </Card>
+
+                  <Card className="hover:shadow-lg transition-shadow">
+                    <CardHeader>
+                      <CardTitle className="flex items-center gap-2">
+                        <Globe className="h-5 w-5 text-cyan-500" />
+                        Country Guides
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <p className="text-muted-foreground mb-4">Detailed information about studying in different countries</p>
+                      <Button className="w-full" variant="outline">Explore Countries</Button>
+                    </CardContent>
+                  </Card>
+
+                  <Card className="hover:shadow-lg transition-shadow">
+                    <CardHeader>
+                      <CardTitle className="flex items-center gap-2">
+                        <Award className="h-5 w-5 text-yellow-500" />
+                        Success Stories
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <p className="text-muted-foreground mb-4">Inspiring stories from successful scholarship recipients</p>
+                      <Button className="w-full" variant="outline">Read Stories</Button>
+                    </CardContent>
+                  </Card>
+                </div>
+              </TabsContent>
+            </>
+          )}
         </Tabs>
       </div>
     </div>

@@ -21,7 +21,8 @@ const BottomNavigation = ({ onNotification }: BottomNavigationProps) => {
     if (profile?.user_type === 'mentor') return '/mentor';
     if (profile?.user_type === 'parent') return '/parent';
     if (profile?.user_type === 'school') return '/school';
-    return '/';
+    if (profile?.is_admin || profile?.is_super_admin) return '/admin';
+    return '/student'; // Default to student dashboard for authenticated users
   };
 
   const navItems = [

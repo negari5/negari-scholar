@@ -16,11 +16,6 @@ const ViewWebsiteSelector: React.FC<ViewWebsiteSelectorProps> = ({
   onSelectPage
 }) => {
   const pages = [
-    { path: '/', name: 'Landing Page', icon: <Home className="h-4 w-4" />, description: 'Main homepage with hero section' },
-    { path: '/explore', name: 'Explore', icon: <Search className="h-4 w-4" />, description: 'Scholarship exploration page' },
-    { path: '/journey', name: 'Journey', icon: <BookOpen className="h-4 w-4" />, description: 'Student journey tracking' },
-    { path: '/messages', name: 'Messages', icon: <MessageSquare className="h-4 w-4" />, description: 'Messaging system' },
-    { path: '/profile', name: 'Profile', icon: <User className="h-4 w-4" />, description: 'User profile management' },
     { path: '/student', name: 'Student Dashboard', icon: <GraduationCap className="h-4 w-4" />, description: 'Student portal and dashboard' },
     { path: '/mentor', name: 'Mentor Page', icon: <Users className="h-4 w-4" />, description: 'Mentor information and portal' },
     { path: '/parent', name: 'Parent Page', icon: <Users className="h-4 w-4" />, description: 'Parent support portal' },
@@ -37,7 +32,7 @@ const ViewWebsiteSelector: React.FC<ViewWebsiteSelectorProps> = ({
           </DialogTitle>
         </DialogHeader>
         
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
           {pages.map((page) => (
             <Card key={page.path} className="hover:shadow-lg transition-all duration-300 cursor-pointer group">
               <CardHeader className="pb-3">
