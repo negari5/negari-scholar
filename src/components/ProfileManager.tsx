@@ -6,9 +6,11 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Textarea } from '@/components/ui/textarea';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { useAuth } from '@/contexts/MockAuthContext';
 import { useToast } from '@/hooks/use-toast';
-import { User, Settings, Shield, CreditCard, Bell } from 'lucide-react';
+import { User, Settings, Shield, CreditCard, Bell, Camera, MapPin, Phone, FileText } from 'lucide-react';
 
 const ProfileManager: React.FC = () => {
   const { profile, updateProfile } = useAuth();
@@ -21,6 +23,11 @@ const ProfileManager: React.FC = () => {
     last_name: profile?.last_name || '',
     phone: profile?.phone || '',
     city: profile?.city || '',
+    address: (profile as any)?.address || '',
+    country: (profile as any)?.country || 'Ethiopia',
+    fayda_fan_no: (profile as any)?.fayda_fan_no || '',
+    profile_picture: (profile as any)?.profile_picture || '',
+    bio: (profile as any)?.bio || '',
     education_level: profile?.education_level || '',
     school_name: profile?.school_name || '',
     user_type: profile?.user_type || 'student'
@@ -68,16 +75,22 @@ const ProfileManager: React.FC = () => {
     }
   };
 
+  const africanCountries = [
+    'Algeria', 'Angola', 'Benin', 'Botswana', 'Burkina Faso', 'Burundi', 'Cabo Verde', 
+    'Cameroon', 'Central African Republic', 'Chad', 'Comoros', 'Democratic Republic of the Congo',
+    'Republic of the Congo', 'Djibouti', 'Egypt', 'Equatorial Guinea', 'Eritrea', 'Eswatini',
+    'Ethiopia', 'Gabon', 'Gambia', 'Ghana', 'Guinea', 'Guinea-Bissau', 'Ivory Coast',
+    'Kenya', 'Lesotho', 'Liberia', 'Libya', 'Madagascar', 'Malawi', 'Mali', 'Mauritania',
+    'Mauritius', 'Morocco', 'Mozambique', 'Namibia', 'Niger', 'Nigeria', 'Rwanda',
+    'São Tomé and Príncipe', 'Senegal', 'Seychelles', 'Sierra Leone', 'Somalia', 'South Africa',
+    'South Sudan', 'Sudan', 'Tanzania', 'Togo', 'Tunisia', 'Uganda', 'Zambia', 'Zimbabwe'
+  ];
+
   return (
-    <div className="space-y-6">
-      <div className="flex items-center gap-3 mb-6">
-        <div className="p-2 bg-negari-indigo/20 rounded-lg">
-          <User className="h-6 w-6 text-negari-indigo" />
-        </div>
-        <div>
-          <h2 className="text-2xl font-bold text-negari-indigo">Profile Settings</h2>
-          <p className="text-gray-600">Manage your account and preferences</p>
-        </div>
+    <div className="space-y-6 max-w-4xl mx-auto">
+      <div className="text-center mb-8">
+        <h2 className="text-3xl font-bold text-primary mb-2">Profile Settings</h2>
+        <p className="text-muted-foreground">Complete your profile to get the best experience</p>
       </div>
 
       <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
@@ -89,6 +102,32 @@ const ProfileManager: React.FC = () => {
         </TabsList>
 
         <TabsContent value="profile" className="space-y-6">
+          {/* Profile Picture Section */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Camera className="h-5 w-5" />
+                Profile Picture
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="flex items-center gap-6">
+              <Avatar className="w-24 h-24">
+                <AvatarImage src={profileForm.profile_picture} />
+                <AvatarFallback className="text-xl">
+                  {profileForm.first_name?.[0]}{profileForm.last_name?.[0]}
+                </AvatarFallback>
+              </Avatar>
+              <div className="space-y-2">
+                <Button variant="outline" size="sm">
+                  <Camera className="h-4 w-4 mr-2" />
+                  Upload Picture
+                </Button>
+                <p className="text-sm text-muted-foreground">JPG, PNG or GIF (max. 2MB)</p>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Personal Information */}
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
@@ -97,113 +136,174 @@ const ProfileManager: React.FC = () => {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <form onSubmit={handleProfileUpdate} className="space-y-4">
+              <form onSubmit={handleProfileUpdate} className="space-y-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <Label htmlFor="first_name">First Name</Label>
+                    <Label htmlFor="first_name">First Name *</Label>
                     <Input
                       id="first_name"
                       value={profileForm.first_name}
                       onChange={(e) => setProfileForm({...profileForm, first_name: e.target.value})}
-                      placeholder="Your first name"
+                      placeholder="Enter your first name"
+                      required
                     />
                   </div>
                   <div>
-                    <Label htmlFor="last_name">Last Name</Label>
+                    <Label htmlFor="last_name">Last Name *</Label>
                     <Input
                       id="last_name"
                       value={profileForm.last_name}
                       onChange={(e) => setProfileForm({...profileForm, last_name: e.target.value})}
-                      placeholder="Your last name"
-                    />
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <Label htmlFor="phone">Phone Number</Label>
-                    <Input
-                      id="phone"
-                      value={profileForm.phone}
-                      onChange={(e) => setProfileForm({...profileForm, phone: e.target.value})}
-                      placeholder="+251..."
-                    />
-                  </div>
-                  <div>
-                    <Label htmlFor="city">City</Label>
-                    <Input
-                      id="city"
-                      value={profileForm.city}
-                      onChange={(e) => setProfileForm({...profileForm, city: e.target.value})}
-                      placeholder="Your city"
-                    />
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <Label htmlFor="education_level">Education Level</Label>
-                    <Select value={profileForm.education_level} onValueChange={(value) => setProfileForm({...profileForm, education_level: value})}>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select level" />
-                      </SelectTrigger>
-                      <SelectContent className="bg-white">
-                        <SelectItem value="grade10">Grade 10</SelectItem>
-                        <SelectItem value="grade11">Grade 11</SelectItem>
-                        <SelectItem value="grade12">Grade 12</SelectItem>
-                        <SelectItem value="undergraduate">Undergraduate</SelectItem>
-                        <SelectItem value="graduate">Graduate</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  <div>
-                    <Label htmlFor="school_name">School Name</Label>
-                    <Input
-                      id="school_name"
-                      value={profileForm.school_name}
-                      onChange={(e) => setProfileForm({...profileForm, school_name: e.target.value})}
-                      placeholder="Your school"
+                      placeholder="Enter your last name"
+                      required
                     />
                   </div>
                 </div>
 
                 <div>
-                  <Label htmlFor="user_type">Student Type</Label>
+                  <Label htmlFor="bio">Bio</Label>
+                  <Textarea
+                    id="bio"
+                    value={profileForm.bio}
+                    onChange={(e) => setProfileForm({...profileForm, bio: e.target.value})}
+                    placeholder="Tell us about yourself, your goals, and aspirations..."
+                    rows={3}
+                  />
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <Label htmlFor="phone">Phone Number *</Label>
+                    <div className="flex">
+                      <div className="flex items-center px-3 bg-muted rounded-l-md border border-r-0">
+                        <Phone className="h-4 w-4 text-muted-foreground mr-2" />
+                        <span className="text-sm">+251</span>
+                      </div>
+                      <Input
+                        id="phone"
+                        value={profileForm.phone}
+                        onChange={(e) => setProfileForm({...profileForm, phone: e.target.value})}
+                        placeholder="911234567"
+                        className="rounded-l-none"
+                        required
+                      />
+                    </div>
+                  </div>
+                  <div>
+                    <Label htmlFor="fayda_fan_no">Fayda FAN Number (Optional)</Label>
+                    <Input
+                      id="fayda_fan_no"
+                      value={profileForm.fayda_fan_no}
+                      onChange={(e) => setProfileForm({...profileForm, fayda_fan_no: e.target.value})}
+                      placeholder="Enter your Fayda FAN number"
+                    />
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <Label htmlFor="country">Country *</Label>
+                    <Select value={profileForm.country} onValueChange={(value) => setProfileForm({...profileForm, country: value})}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select your country" />
+                      </SelectTrigger>
+                      <SelectContent className="bg-background max-h-60">
+                        {africanCountries.map((country) => (
+                          <SelectItem key={country} value={country}>
+                            {country}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div>
+                    <Label htmlFor="city">City *</Label>
+                    <Input
+                      id="city"
+                      value={profileForm.city}
+                      onChange={(e) => setProfileForm({...profileForm, city: e.target.value})}
+                      placeholder="Enter your city"
+                      required
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <Label htmlFor="address">Address</Label>
+                  <Textarea
+                    id="address"
+                    value={profileForm.address}
+                    onChange={(e) => setProfileForm({...profileForm, address: e.target.value})}
+                    placeholder="Enter your full address"
+                    rows={2}
+                  />
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <Label htmlFor="education_level">Education Level *</Label>
+                    <Select value={profileForm.education_level} onValueChange={(value) => setProfileForm({...profileForm, education_level: value})}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select your education level" />
+                      </SelectTrigger>
+                      <SelectContent className="bg-background">
+                        <SelectItem value="grade10">Grade 10</SelectItem>
+                        <SelectItem value="grade11">Grade 11</SelectItem>
+                        <SelectItem value="grade12">Grade 12</SelectItem>
+                        <SelectItem value="undergraduate">Undergraduate</SelectItem>
+                        <SelectItem value="graduate">Graduate</SelectItem>
+                        <SelectItem value="postgraduate">Postgraduate</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div>
+                    <Label htmlFor="school_name">School/Institution Name</Label>
+                    <Input
+                      id="school_name"
+                      value={profileForm.school_name}
+                      onChange={(e) => setProfileForm({...profileForm, school_name: e.target.value})}
+                      placeholder="Enter your school or institution name"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <Label htmlFor="user_type">Account Type *</Label>
                   <Select value={profileForm.user_type} onValueChange={(value) => setProfileForm({...profileForm, user_type: value as 'student' | 'parent' | 'mentor' | 'school' | 'admin' | 'super_admin'})}>
                     <SelectTrigger>
                       <SelectValue />
                     </SelectTrigger>
-                    <SelectContent className="bg-white">
+                    <SelectContent className="bg-background">
                       <SelectItem value="student">
-                        <div>
+                        <div className="py-1">
                           <div className="font-medium">Student</div>
-                          <div className="text-sm text-gray-500">{getUserTypeDescription('student')}</div>
+                          <div className="text-sm text-muted-foreground">{getUserTypeDescription('student')}</div>
                         </div>
                       </SelectItem>
                       <SelectItem value="parent">
-                        <div>
+                        <div className="py-1">
                           <div className="font-medium">Parent</div>
-                          <div className="text-sm text-gray-500">{getUserTypeDescription('parent')}</div>
+                          <div className="text-sm text-muted-foreground">{getUserTypeDescription('parent')}</div>
                         </div>
                       </SelectItem>
                       <SelectItem value="mentor">
-                        <div>
+                        <div className="py-1">
                           <div className="font-medium">Mentor</div>
-                          <div className="text-sm text-gray-500">{getUserTypeDescription('mentor')}</div>
+                          <div className="text-sm text-muted-foreground">{getUserTypeDescription('mentor')}</div>
                         </div>
                       </SelectItem>
                       <SelectItem value="school">
-                        <div>
-                          <div className="font-medium">School</div>
-                          <div className="text-sm text-gray-500">{getUserTypeDescription('school')}</div>
+                        <div className="py-1">
+                          <div className="font-medium">School Representative</div>
+                          <div className="text-sm text-muted-foreground">{getUserTypeDescription('school')}</div>
                         </div>
                       </SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
 
-                <Button type="submit" disabled={loading} className="bg-negari-orange hover:bg-negari-indigo">
-                  {loading ? "Updating..." : "Update Profile"}
+                <Button type="submit" disabled={loading} className="w-full">
+                  {loading ? "Updating Profile..." : "Update Profile"}
                 </Button>
               </form>
             </CardContent>

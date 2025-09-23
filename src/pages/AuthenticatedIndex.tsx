@@ -32,7 +32,11 @@ const AuthenticatedIndex = () => {
   }
 
   // Show landing page for unauthenticated users or as main page
-  return <LandingPage />;
+  return (
+    <div className="min-h-screen overflow-auto">
+      <LandingPage />
+    </div>
+  );
 };
 
 export default AuthenticatedIndex;

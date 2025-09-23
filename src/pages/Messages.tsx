@@ -93,23 +93,12 @@ const Messages = () => {
   return (
     <div className="min-h-screen bg-sunrise-gradient cultural-bg">
       <div className="container mx-auto px-4 py-8">
-        {/* Header with Home Button */}
-        <div className="flex items-center justify-between mb-8">
-          <Button
-            onClick={() => navigate('/')}
-            variant="outline"
-            className="flex items-center gap-2 hover:bg-negari-orange hover:text-white"
-          >
-            <Home className="h-4 w-4" />
-            Home
-          </Button>
-          <div className="text-center">
-            <h1 className="text-3xl font-bold text-negari-indigo mb-4">Messages</h1>
-            <p className="text-gray-600 max-w-2xl mx-auto">
-              Connect with fellow students, mentors, and study groups
-            </p>
-          </div>
-          <div></div>
+        {/* Header */}
+        <div className="text-center mb-8">
+          <h1 className="text-3xl font-bold text-primary mb-4">Messages</h1>
+          <p className="text-muted-foreground max-w-2xl mx-auto">
+            Connect with fellow students, mentors, and study groups
+          </p>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 h-[600px]">
