@@ -4,29 +4,17 @@ import { supabase } from '@/integrations/supabase/client';
 
 interface Profile {
   id: string;
-  email: string;
-  first_name: string | null;
-  last_name: string | null;
+  email: string | null;
   full_name: string | null;
-  user_type: 'student' | 'parent' | 'mentor' | 'school' | 'admin' | 'super_admin';
-  city: string | null;
-  preparatory_school_type: string | null;
-  education_level: string | null;
-  phone: string | null;
-  date_of_birth: string | null;
-  gender: string | null;
-  current_grade_level: string | null;
-  school_name: string | null;
-  gpa: number | null;
-  career_interests: string[] | null;
-  preferred_countries: string[] | null;
-  preferred_fields: string[] | null;
-  language_proficiency: any | null;
-  has_completed_profile: boolean;
-  subscription_tier: string;
-  subscription_expires_at: string | null;
-  is_admin: boolean;
-  is_super_admin: boolean;
+  phone_number: string | null;
+  address: string | null;
+  country: string | null;
+  fayda_fan_number: string | null;
+  profile_picture_url: string | null;
+  subscription_type: string;
+  account_type: string | null;
+  created_at: string;
+  updated_at: string;
 }
 
 interface AuthContextType {
@@ -65,105 +53,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         .single();
 
       if (error) {
-        // If no row found, create a default profile for this user (avoids relying on auth triggers)
-        if (status === 406 || (error as any)?.code === 'PGRST116') {
-          const { data: userRes } = await supabase.auth.getUser();
-          const currentUser = userRes?.user;
-
-          const { data: inserted, error: insertError } = await supabase
-            .from('profiles')
-            .insert({
-              id: userId,
-              email: currentUser?.email ?? '',
-              first_name: (currentUser?.user_metadata as any)?.first_name ?? null,
-              last_name: (currentUser?.user_metadata as any)?.last_name ?? null,
-            is_admin: currentUser?.email === 'negari@gmail.com',
-            is_super_admin: currentUser?.email === 'negari@gmail.com'
-            })
-            .select('*')
-            .single();
-
-          if (insertError) {
-            console.error('Error creating default profile:', insertError);
-            return;
-          }
-          // Determine user type based on email
-          let userType: Profile['user_type'] = 'student';
-          if (currentUser?.email === 'negari@gmail.com') {
-            userType = 'super_admin';
-          } else {
-            userType = (currentUser?.user_metadata as any)?.user_type || 'student';
-          }
-
-          // Map the inserted data to our Profile interface
-          const mappedProfile: Profile = {
-            id: inserted.id,
-            email: inserted.email,
-            first_name: inserted.first_name,
-            last_name: inserted.last_name,
-            full_name: `${inserted.first_name || ''} ${inserted.last_name || ''}`.trim() || inserted.email,
-            user_type: userType,
-            city: null,
-            preparatory_school_type: null,
-            education_level: inserted.education_level,
-            phone: null,
-            date_of_birth: null,
-            gender: null,
-            current_grade_level: null,
-            school_name: null,
-            gpa: null,
-            career_interests: null,
-            preferred_countries: null,
-            preferred_fields: null,
-            language_proficiency: null,
-            has_completed_profile: false,
-            subscription_tier: 'free',
-            subscription_expires_at: null,
-            is_admin: inserted.is_admin || false,
-            is_super_admin: (inserted as any).is_super_admin || false
-          };
-          setProfile(mappedProfile);
-          return;
-        }
         console.error('Error fetching profile:', error);
         return;
       }
-      // Determine user type based on email and data
-      let userType: Profile['user_type'] = 'student';
-      if (data.email === 'negari@gmail.com') {
-        userType = 'super_admin';
-      } else {
-        userType = (data as any).user_type || 'student';
-      }
-
-      // Map the data to our Profile interface
-      const mappedProfile: Profile = {
-        id: data.id,
-        email: data.email,
-        first_name: data.first_name,
-        last_name: data.last_name,
-        full_name: `${data.first_name || ''} ${data.last_name || ''}`.trim() || data.email,
-        user_type: userType,
-        city: (data as any).area_of_living,
-        preparatory_school_type: (data as any).school_type,
-        education_level: data.education_level,
-        phone: null,
-        date_of_birth: null,
-        gender: null,
-        current_grade_level: null,
-        school_name: null,
-        gpa: null,
-        career_interests: null,
-        preferred_countries: null,
-        preferred_fields: null,
-        language_proficiency: null,
-        has_completed_profile: false,
-        subscription_tier: 'free',
-        subscription_expires_at: null,
-        is_admin: data.is_admin || false,
-        is_super_admin: (data as any).is_super_admin || false
-      };
-      setProfile(mappedProfile);
+      
+      setProfile(data);
     } catch (error) {
       console.error('Error fetching profile:', error);
     }
@@ -228,51 +122,18 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       
       if (error) throw error;
 
-      // Handle role-based authentication and redirect
+      // Ensure profile exists
       if (data.user) {
-        let userType: Profile['user_type'] = 'student';
-        let isAdmin = false;
-        let isSuperAdmin = false;
-
-        // Role assignment based on email
-        if (email === "negari@gmail.com") {
-          userType = 'super_admin';
-          isSuperAdmin = true;
-          isAdmin = true;
-        } else {
-          // Regular users get 'student' by default
-          userType = 'student';
-        }
-
-        // Try to set role flags; if the columns don't exist yet, fall back gracefully
         const { error: profileError } = await supabase
           .from('profiles')
           .upsert({
             id: data.user.id,
             email: data.user.email,
-            user_type: userType,
-            is_super_admin: isSuperAdmin,
-            is_admin: isAdmin,
             updated_at: new Date().toISOString(),
           });
 
         if (profileError) {
-          if ((profileError as any)?.code === 'PGRST204') {
-            // Fallback: upsert only safe columns when role columns are missing
-            const { error: fallbackError } = await supabase
-              .from('profiles')
-              .upsert({
-                id: data.user.id,
-                email: data.user.email,
-                user_type: userType,
-                updated_at: new Date().toISOString(),
-              });
-            if (fallbackError) {
-              console.error("Profile fallback upsert failed:", fallbackError);
-            }
-          } else {
-            console.error("Error updating user profile:", profileError);
-          }
+          console.error("Error updating user profile:", profileError);
         }
       }
       

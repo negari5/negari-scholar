@@ -1,8 +1,8 @@
 import React from 'react';
-import StudentDashboard from '@/components/StudentDashboard';
+import FunctionalStudentDashboard from '@/components/FunctionalStudentDashboard';
 
 const StudentPage: React.FC = () => {
-  return <StudentDashboard />;
+  return <FunctionalStudentDashboard />;
 };
 
 export default StudentPage;

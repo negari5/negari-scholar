@@ -14,7 +14,291 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      applications: {
+        Row: {
+          created_at: string | null
+          id: string
+          next_step: string | null
+          notes: string | null
+          progress: number | null
+          scholarship_id: string
+          status: string | null
+          submitted_at: string | null
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          next_step?: string | null
+          notes?: string | null
+          progress?: number | null
+          scholarship_id: string
+          status?: string | null
+          submitted_at?: string | null
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          next_step?: string | null
+          notes?: string | null
+          progress?: number | null
+          scholarship_id?: string
+          status?: string | null
+          submitted_at?: string | null
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "applications_scholarship_id_fkey"
+            columns: ["scholarship_id"]
+            isOneToOne: false
+            referencedRelation: "scholarships"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "applications_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      mentor_sessions: {
+        Row: {
+          created_at: string | null
+          id: string
+          meeting_link: string | null
+          mentor_id: string
+          notes: string | null
+          session_date: string
+          session_time: string
+          status: string | null
+          student_id: string
+          topic: string
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          meeting_link?: string | null
+          mentor_id: string
+          notes?: string | null
+          session_date: string
+          session_time: string
+          status?: string | null
+          student_id: string
+          topic: string
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          meeting_link?: string | null
+          mentor_id?: string
+          notes?: string | null
+          session_date?: string
+          session_time?: string
+          status?: string | null
+          student_id?: string
+          topic?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "mentor_sessions_mentor_id_fkey"
+            columns: ["mentor_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "mentor_sessions_student_id_fkey"
+            columns: ["student_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      messages: {
+        Row: {
+          content: string
+          created_at: string | null
+          id: string
+          read: boolean | null
+          recipient_id: string
+          sender_id: string
+          subject: string | null
+        }
+        Insert: {
+          content: string
+          created_at?: string | null
+          id?: string
+          read?: boolean | null
+          recipient_id: string
+          sender_id: string
+          subject?: string | null
+        }
+        Update: {
+          content?: string
+          created_at?: string | null
+          id?: string
+          read?: boolean | null
+          recipient_id?: string
+          sender_id?: string
+          subject?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "messages_recipient_id_fkey"
+            columns: ["recipient_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "messages_sender_id_fkey"
+            columns: ["sender_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      profiles: {
+        Row: {
+          account_type: string | null
+          address: string | null
+          country: string | null
+          created_at: string | null
+          email: string | null
+          fayda_fan_number: string | null
+          full_name: string | null
+          id: string
+          phone_number: string | null
+          profile_picture_url: string | null
+          subscription_type: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          account_type?: string | null
+          address?: string | null
+          country?: string | null
+          created_at?: string | null
+          email?: string | null
+          fayda_fan_number?: string | null
+          full_name?: string | null
+          id: string
+          phone_number?: string | null
+          profile_picture_url?: string | null
+          subscription_type?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          account_type?: string | null
+          address?: string | null
+          country?: string | null
+          created_at?: string | null
+          email?: string | null
+          fayda_fan_number?: string | null
+          full_name?: string | null
+          id?: string
+          phone_number?: string | null
+          profile_picture_url?: string | null
+          subscription_type?: string | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      resources: {
+        Row: {
+          access_level: string | null
+          category: string
+          content_type: string | null
+          content_url: string | null
+          created_at: string | null
+          description: string | null
+          id: string
+          title: string
+          updated_at: string | null
+        }
+        Insert: {
+          access_level?: string | null
+          category: string
+          content_type?: string | null
+          content_url?: string | null
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          title: string
+          updated_at?: string | null
+        }
+        Update: {
+          access_level?: string | null
+          category?: string
+          content_type?: string | null
+          content_url?: string | null
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          title?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      scholarships: {
+        Row: {
+          amount: string
+          application_url: string | null
+          country: string | null
+          created_at: string | null
+          deadline: string
+          description: string | null
+          eligibility_criteria: string | null
+          id: string
+          requirements: string[] | null
+          status: string | null
+          title: string
+          university: string
+          updated_at: string | null
+        }
+        Insert: {
+          amount: string
+          application_url?: string | null
+          country?: string | null
+          created_at?: string | null
+          deadline: string
+          description?: string | null
+          eligibility_criteria?: string | null
+          id?: string
+          requirements?: string[] | null
+          status?: string | null
+          title: string
+          university: string
+          updated_at?: string | null
+        }
+        Update: {
+          amount?: string
+          application_url?: string | null
+          country?: string | null
+          created_at?: string | null
+          deadline?: string
+          description?: string | null
+          eligibility_criteria?: string | null
+          id?: string
+          requirements?: string[] | null
+          status?: string | null
+          title?: string
+          university?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never

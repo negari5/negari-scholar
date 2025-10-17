@@ -8,6 +8,7 @@ import AuthButton from "@/components/AuthButton";
 import AuthModal from "@/components/AuthModal";
 import SelfAssessment from "@/components/SelfAssessment";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
+import SubscriptionPlans from "@/components/SubscriptionPlans";
 import { useSubscriptions } from '@/contexts/SubscriptionContext';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useEffect, useState } from "react";
@@ -491,6 +492,7 @@ const LandingPage = () => {
       {/* Subscription Pricing Section */}
       <section className="py-20 bg-gradient-to-br from-primary/5 to-secondary/5">
         <div className="container mx-auto px-6">
+          <SubscriptionPlans onSelectPlan={(plan) => setShowAuthModal(true)} />
           <div className="text-center mb-16">
             <h2 className="text-4xl md:text-5xl font-comfortaa font-bold text-gray-900 mb-6">
               Choose Your Plan

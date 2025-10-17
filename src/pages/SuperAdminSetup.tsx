@@ -26,11 +26,11 @@ const SuperAdminSetup: React.FC = () => {
   const SUPER_ADMIN_SETUP_CODE = 'NEGARI_SUPER_ADMIN_2024';
 
   useEffect(() => {
-    // Redirect if user is already logged in or is already super admin
-    if (user && profile?.is_super_admin) {
+    // Redirect if user is already logged in
+    if (user) {
       navigate('/admin');
     }
-  }, [user, profile, navigate]);
+  }, [user, navigate]);
 
   const handleCodeVerification = () => {
     if (setupCode !== SUPER_ADMIN_SETUP_CODE) {
@@ -68,70 +68,39 @@ const SuperAdminSetup: React.FC = () => {
     setLoading(true);
 
     try {
-      // Check if super admin already exists
-      const { data: existingSuperAdmins, error: checkError } = await supabase
-        .from('profiles')
-        .select('id')
-        .eq('is_admin', true);
-
-      if (checkError) throw checkError;
-
-      if (existingSuperAdmins && existingSuperAdmins.length > 0) {
-        toast({
-          title: "Super Admin Already Exists",
-          description: "A Super Admin account has already been created.",
-          variant: "destructive"
-        });
-        return;
-      }
-
-      // Create the super admin account
+      // Create the admin account
       const { data: authData, error: authError } = await supabase.auth.signUp({
         email,
         password,
         options: {
           data: {
-            first_name: firstName,
-            last_name: lastName,
-            user_type: 'super_admin'
+            full_name: `${firstName} ${lastName}`,
+            account_type: 'student'
           }
         }
       });
 
       if (authError) throw authError;
 
-      if (authData.user) {
-        // Update profile to set super admin status
-        const { error: profileError } = await supabase
-          .from('profiles')
-          .update({
-            is_admin: true,
-            user_type: 'super_admin'
-          })
-          .eq('id', authData.user.id);
+      toast({
+        title: "Admin Account Created!",
+        description: "Please check your email to verify your account, then sign in.",
+      });
 
-        if (profileError) throw profileError;
-
-        toast({
-          title: "Super Admin Created!",
-          description: "Please check your email to verify your account, then sign in.",
-        });
-
-        // Clear form
-        setEmail('');
-        setPassword('');
-        setConfirmPassword('');
-        setSetupCode('');
-        setStep('verify');
-        
-        // Redirect to home page
-        navigate('/');
-      }
+      // Clear form
+      setEmail('');
+      setPassword('');
+      setConfirmPassword('');
+      setSetupCode('');
+      setStep('verify');
+      
+      // Redirect to home page
+      navigate('/');
     } catch (error: any) {
-      console.error('Error creating super admin:', error);
+      console.error('Error creating admin:', error);
       toast({
         title: "Setup Failed",
-        description: error.message || "Failed to create Super Admin account.",
+        description: error.message || "Failed to create Admin account.",
         variant: "destructive"
       });
     } finally {
@@ -148,11 +117,11 @@ const SuperAdminSetup: React.FC = () => {
               <Shield className="h-8 w-8 text-primary" />
             </div>
           </div>
-          <CardTitle className="text-2xl">Super Admin Setup</CardTitle>
+          <CardTitle className="text-2xl">Admin Setup</CardTitle>
           <p className="text-muted-foreground">
             {step === 'verify' 
-              ? 'Enter the setup code to create the Super Admin account'
-              : 'Create the Super Admin account'
+              ? 'Enter the setup code to create the Admin account'
+              : 'Create the Admin account'
             }
           </p>
         </CardHeader>
@@ -261,7 +230,7 @@ const SuperAdminSetup: React.FC = () => {
                   disabled={loading || !email || !password || !confirmPassword}
                   className="flex-1"
                 >
-                  {loading ? 'Creating...' : 'Create Super Admin'}
+                  {loading ? 'Creating...' : 'Create Admin'}
                 </Button>
               </div>
             </form>

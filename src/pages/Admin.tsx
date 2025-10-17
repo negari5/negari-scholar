@@ -14,13 +14,13 @@ import { useNavigate } from "react-router-dom";
 
 interface UserProfile {
   id: string;
-  email: string;
-  first_name: string | null;
-  last_name: string | null;
-  education_level: string | null;
-  area_of_living: string | null;
-  school_type: string | null;
-  is_admin: boolean | null;
+  email: string | null;
+  full_name: string | null;
+  phone_number: string | null;
+  address: string | null;
+  country: string | null;
+  account_type: string | null;
+  subscription_type: string;
   created_at: string;
 }
 
@@ -32,22 +32,13 @@ const Admin = () => {
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
 
-  // Check if user is admin
+  // Check if user is logged in
   useEffect(() => {
     if (!user) {
       navigate('/');
       return;
     }
-    if (profile && !profile.is_admin) {
-      toast({
-        title: "Access Denied",
-        description: "You don't have permission to access this page.",
-        variant: "destructive",
-      });
-      navigate('/');
-      return;
-    }
-  }, [user, profile, navigate, toast]);
+  }, [user, navigate]);
 
   // Fetch all users (only admins can see this)
   useEffect(() => {
@@ -72,44 +63,45 @@ const Admin = () => {
       }
     };
 
-    if (profile?.is_admin) {
+    if (profile) {
       fetchUsers();
     }
-  }, [profile?.is_admin, toast]);
+  }, [profile, toast]);
 
   const filteredUsers = users.filter(user =>
-    user.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    (user.first_name?.toLowerCase().includes(searchTerm.toLowerCase())) ||
-    (user.last_name?.toLowerCase().includes(searchTerm.toLowerCase()))
+    user.email?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    user.full_name?.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   const stats = {
     totalUsers: users.length,
-    adminUsers: users.filter(u => u.is_admin).length,
+    premiumUsers: users.filter(u => u.subscription_type !== 'freemium').length,
     recentUsers: users.filter(u => {
       const createdAt = new Date(u.created_at);
       const weekAgo = new Date();
       weekAgo.setDate(weekAgo.getDate() - 7);
       return createdAt > weekAgo;
     }).length,
-    completedProfiles: users.filter(u => u.first_name && u.last_name && u.education_level).length
+    completedProfiles: users.filter(u => u.full_name && u.account_type).length
   };
 
-  const getEducationLevelDisplay = (level: string | null) => {
-    if (!level) return 'Not specified';
-    const levels: { [key: string]: string } = {
-      'elementary': 'Elementary',
-      'middle_school': 'Middle School',
-      'high_school': 'High School',
-      'undergraduate': 'Undergraduate',
-      'graduate': 'Graduate',
-      'postgraduate': 'Postgraduate'
+  const getAccountTypeDisplay = (type: string | null) => {
+    if (!type) return 'Not specified';
+    const types: { [key: string]: string } = {
+      'junior': 'Negari Junior',
+      'starter': 'Starter Kit',
+      'senior': 'Negari Senior',
+      'rise': 'Negari RISE',
+      'student': 'Student',
+      'mentor': 'Mentor',
+      'parent': 'Parent',
+      'school': 'School'
     };
-    return levels[level] || level;
+    return types[type] || type;
   };
 
-  if (!profile?.is_admin) {
-    return null; // This will be handled by the useEffect redirect
+  if (!profile) {
+    return null;
   }
 
   return (
@@ -152,8 +144,8 @@ const Admin = () => {
                       <Shield className="h-6 w-6 text-negari-gold" />
                     </div>
                     <div>
-                      <p className="text-sm text-gray-600">Admins</p>
-                      <p className="text-2xl font-bold text-negari-indigo">{stats.adminUsers}</p>
+                      <p className="text-sm text-gray-600">Premium Users</p>
+                      <p className="text-2xl font-bold text-negari-indigo">{stats.premiumUsers}</p>
                     </div>
                   </div>
                 </CardContent>
@@ -221,20 +213,17 @@ const Admin = () => {
                         <Avatar className="h-12 w-12">
                           <AvatarImage src="/placeholder.svg" />
                           <AvatarFallback className="bg-negari-orange/20 text-negari-orange">
-                            {(user.first_name?.charAt(0) || user.email.charAt(0)).toUpperCase()}
+                            {(user.full_name?.charAt(0) || user.email?.charAt(0) || 'U').toUpperCase()}
                           </AvatarFallback>
                         </Avatar>
                         
                         <div className="flex-grow">
                           <div className="flex items-center gap-2">
                             <h4 className="font-medium text-negari-indigo">
-                              {user.first_name && user.last_name 
-                                ? `${user.first_name} ${user.last_name}`
-                                : 'Profile Incomplete'
-                              }
+                              {user.full_name || 'Profile Incomplete'}
                             </h4>
-                            {user.is_admin && (
-                              <Badge className="bg-negari-gold text-white">Admin</Badge>
+                            {user.subscription_type !== 'freemium' && (
+                              <Badge className="bg-negari-gold text-white">{user.subscription_type}</Badge>
                             )}
                           </div>
                           <div className="flex items-center gap-2 text-sm text-gray-600">
@@ -242,14 +231,14 @@ const Admin = () => {
                             <span>{user.email}</span>
                           </div>
                           <div className="flex items-center gap-4 text-sm text-gray-600 mt-1">
-                            {user.education_level && (
+                            {user.account_type && (
                               <div className="flex items-center gap-1">
                                 <School className="h-3 w-3" />
-                                <span>{getEducationLevelDisplay(user.education_level)}</span>
+                                <span>{getAccountTypeDisplay(user.account_type)}</span>
                               </div>
                             )}
-                            {user.area_of_living && (
-                              <span>📍 {user.area_of_living}</span>
+                            {user.country && (
+                              <span>📍 {user.country}</span>
                             )}
                           </div>
                         </div>
