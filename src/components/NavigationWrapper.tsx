@@ -14,7 +14,7 @@ const NavigationWrapper: React.FC<NavigationWrapperProps> = ({ children }) => {
   const isMobile = useIsMobile();
   
   // Pages where we don't want to show navigation
-  const hideNavPages = ['/super-admin-setup', '/admin'];
+  const hideNavPages = ['/super-admin-setup', '/admin', '/student', '/mentor', '/parent', '/school'];
   const shouldShowNav = !hideNavPages.includes(location.pathname) && location.pathname !== '/';
 
   const handleNotification = (title: string, description: string) => {

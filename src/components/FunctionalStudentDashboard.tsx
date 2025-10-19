@@ -10,6 +10,16 @@ import {
   Search, Filter, Plus, Eye, Edit, Trash2,
   CheckCircle, Clock, AlertTriangle, Star
 } from 'lucide-react';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { supabase } from '@/integrations/supabase/client';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
@@ -22,6 +32,8 @@ const FunctionalStudentDashboard: React.FC = () => {
   const [resources, setResources] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [profile, setProfile] = useState<any>(null);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [applicationToDelete, setApplicationToDelete] = useState<string | null>(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -117,21 +129,30 @@ const FunctionalStudentDashboard: React.FC = () => {
     }
   };
 
-  const handleDeleteApplication = async (applicationId: string) => {
+  const handleDeleteApplication = async () => {
+    if (!applicationToDelete) return;
+    
     try {
       const { error } = await supabase
         .from('applications')
         .delete()
-        .eq('id', applicationId);
+        .eq('id', applicationToDelete);
 
       if (error) throw error;
 
       toast.success('Application deleted successfully!');
+      setDeleteDialogOpen(false);
+      setApplicationToDelete(null);
       fetchData();
     } catch (error) {
       console.error('Error deleting application:', error);
       toast.error('Failed to delete application');
     }
+  };
+
+  const confirmDelete = (applicationId: string) => {
+    setApplicationToDelete(applicationId);
+    setDeleteDialogOpen(true);
   };
 
   if (loading) {
@@ -376,7 +397,7 @@ const FunctionalStudentDashboard: React.FC = () => {
                           <Button 
                             size="sm" 
                             variant="outline"
-                            onClick={() => handleDeleteApplication(app.id)}
+                            onClick={() => confirmDelete(app.id)}
                           >
                             <Trash2 className="h-4 w-4" />
                           </Button>
@@ -539,6 +560,29 @@ const FunctionalStudentDashboard: React.FC = () => {
           </TabsContent>
         </Tabs>
       </div>
+
+      {/* Delete Confirmation Dialog */}
+      <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete Application</AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure you want to delete this application? This action cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel onClick={() => setApplicationToDelete(null)}>
+              Cancel
+            </AlertDialogCancel>
+            <AlertDialogAction 
+              onClick={handleDeleteApplication}
+              className="bg-destructive hover:bg-destructive/90"
+            >
+              Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 };

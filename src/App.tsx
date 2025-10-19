@@ -47,7 +47,7 @@ const AppContent = () => {
         <Route path="/info" element={<InfoPage />} />
         <Route path="/admin" element={<AdminDashboard />} />
         <Route path="/super-admin-setup" element={<SuperAdminSetup />} />
-        <Route path="/student" element={<EnhancedStudentDashboard />} />
+        <Route path="/student" element={<StudentPage />} />
         <Route path="/mentor" element={<MentorPage />} />
         <Route path="/parent" element={<ParentPage />} />
         <Route path="/school" element={<SchoolPage />} />
