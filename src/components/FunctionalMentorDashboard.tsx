@@ -21,11 +21,8 @@ const FunctionalMentorDashboard: React.FC = () => {
   const { t } = useLanguage();
   const isMobile = useIsMobile();
 
-  const menteeData = [
-    { id: 1, name: 'Almaz Tadesse', university: 'Targeting MIT', progress: 75, nextSession: '2024-10-20' },
-    { id: 2, name: 'Dawit Mengistu', university: 'Targeting Stanford', progress: 60, nextSession: '2024-10-22' },
-    { id: 3, name: 'Sara Ahmed', university: 'Targeting Harvard', progress: 85, nextSession: '2024-10-25' }
-  ];
+  // TODO: Fetch from database
+  const menteeData: any[] = [];
 
   if (showInfo) {
     return <InfoSection userType="mentor" />;
@@ -77,50 +74,36 @@ const FunctionalMentorDashboard: React.FC = () => {
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 lg:gap-6">
               <Card className="hover:shadow-lg transition-all duration-300">
                 <CardHeader className="pb-2"><CardTitle className="text-xs lg:text-sm">Active Mentees</CardTitle></CardHeader>
-                <CardContent><div className="text-xl lg:text-2xl font-bold text-primary">8</div></CardContent>
+                <CardContent><div className="text-xl lg:text-2xl font-bold text-primary">0</div></CardContent>
               </Card>
               <Card className="hover:shadow-lg transition-all duration-300">
                 <CardHeader className="pb-2"><CardTitle className="text-xs lg:text-sm">This Month</CardTitle></CardHeader>
-                <CardContent><div className="text-xl lg:text-2xl font-bold text-secondary">24</div><p className="text-xs text-muted-foreground">Sessions</p></CardContent>
+                <CardContent><div className="text-xl lg:text-2xl font-bold text-secondary">0</div><p className="text-xs text-muted-foreground">Sessions</p></CardContent>
               </Card>
               <Card className="hover:shadow-lg transition-all duration-300">
                 <CardHeader className="pb-2"><CardTitle className="text-xs lg:text-sm">Success Rate</CardTitle></CardHeader>
-                <CardContent><div className="text-xl lg:text-2xl font-bold text-green-600">92%</div></CardContent>
+                <CardContent><div className="text-xl lg:text-2xl font-bold text-green-600">0%</div></CardContent>
               </Card>
               <Card className="hover:shadow-lg transition-all duration-300">
                 <CardHeader className="pb-2"><CardTitle className="text-xs lg:text-sm">Rating</CardTitle></CardHeader>
-                <CardContent><div className="text-xl lg:text-2xl font-bold text-accent">4.9</div><div className="flex">{[1,2,3,4,5].map(i => <Star key={i} className="h-3 w-3 text-yellow-500 fill-current" />)}</div></CardContent>
+                <CardContent><div className="text-xl lg:text-2xl font-bold text-accent">0</div></CardContent>
               </Card>
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               <Card>
                 <CardHeader><CardTitle>Upcoming Sessions</CardTitle></CardHeader>
-                <CardContent className="space-y-3">
-                  {menteeData.map(mentee => (
-                    <div key={mentee.id} className="flex items-center justify-between p-3 bg-muted/30 rounded-lg">
-                      <div>
-                        <p className="font-medium text-sm">{mentee.name}</p>
-                        <p className="text-xs text-muted-foreground">{mentee.nextSession}</p>
-                      </div>
-                      <Button size="sm">Join</Button>
-                    </div>
-                  ))}
+                <CardContent className="text-center py-8">
+                  <Calendar className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
+                  <p className="text-muted-foreground">No upcoming sessions scheduled</p>
                 </CardContent>
               </Card>
               
               <Card>
                 <CardHeader><CardTitle>Mentee Progress</CardTitle></CardHeader>
-                <CardContent className="space-y-4">
-                  {menteeData.map(mentee => (
-                    <div key={mentee.id} className="space-y-2">
-                      <div className="flex justify-between text-sm">
-                        <span>{mentee.name}</span>
-                        <span>{mentee.progress}%</span>
-                      </div>
-                      <Progress value={mentee.progress} className="h-2" />
-                    </div>
-                  ))}
+                <CardContent className="text-center py-8">
+                  <Users className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
+                  <p className="text-muted-foreground">No mentees assigned yet</p>
                 </CardContent>
               </Card>
             </div>
@@ -129,31 +112,13 @@ const FunctionalMentorDashboard: React.FC = () => {
           <TabsContent value="mentees">
             <div className="space-y-6">
               <h2 className="text-2xl font-bold">My Mentees</h2>
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                {menteeData.map(mentee => (
-                  <Card key={mentee.id} className="hover:shadow-lg transition-all">
-                    <CardContent className="p-6">
-                      <div className="flex items-center gap-4">
-                        <Avatar className="h-12 w-12"><AvatarFallback>{mentee.name.split(' ').map(n => n[0]).join('')}</AvatarFallback></Avatar>
-                        <div className="flex-1">
-                          <h3 className="font-semibold">{mentee.name}</h3>
-                          <p className="text-sm text-muted-foreground">{mentee.university}</p>
-                          <div className="mt-2">
-                            <div className="flex justify-between text-xs mb-1">
-                              <span>Progress</span><span>{mentee.progress}%</span>
-                            </div>
-                            <Progress value={mentee.progress} className="h-2" />
-                          </div>
-                        </div>
-                        <div className="flex flex-col gap-2">
-                          <Button size="sm"><MessageSquare className="h-4 w-4 mr-1" />Chat</Button>
-                          <Button size="sm" variant="outline"><Calendar className="h-4 w-4 mr-1" />Schedule</Button>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
+              <Card>
+                <CardContent className="text-center py-12">
+                  <Users className="h-16 w-16 mx-auto text-muted-foreground mb-4" />
+                  <h3 className="text-lg font-semibold mb-2">No Mentees Yet</h3>
+                  <p className="text-muted-foreground">You haven't been assigned any mentees yet.</p>
+                </CardContent>
+              </Card>
             </div>
           </TabsContent>
 

@@ -20,33 +20,25 @@ const FunctionalSchoolDashboard: React.FC = () => {
     return <InfoSection userType="school" />;
   }
 
+  // TODO: Fetch from database
   const schoolStats = {
-    totalStudents: 1245,
-    activeApplications: 89,
-    successRate: 78,
-    partnershipsActive: 25,
-    scholarshipWinners: 67
+    totalStudents: 0,
+    activeApplications: 0,
+    successRate: 0,
+    partnershipsActive: 0,
+    scholarshipWinners: 0
   };
 
-  const recentActivity = [
-    { student: 'Sarah Kebede', action: 'Accepted to Harvard', date: '2 days ago', status: 'success' },
-    { student: 'Michael Abebe', action: 'Scholarship received', date: '1 week ago', status: 'success' },
-    { student: 'Hanan Teshome', action: 'Application submitted', date: '3 days ago', status: 'pending' },
-  ];
+  const recentActivity: any[] = [];
 
-  const partnerships = [
-    { name: 'Harvard University', students: 15, status: 'active' },
-    { name: 'MIT', students: 12, status: 'active' },
-    { name: 'Oxford University', students: 8, status: 'active' },
-    { name: 'Stanford University', students: 10, status: 'active' },
-  ];
+  const partnerships: any[] = [];
 
   const representativeInfo = {
-    name: 'Dr. Kebede Alemu',
-    position: 'International Programs Director',
-    email: 'k.alemu@school.edu.et',
-    phone: '+251-911-123456',
-    experience: '8 years'
+    name: 'N/A',
+    position: 'N/A',
+    email: 'N/A',
+    phone: 'N/A',
+    experience: 'N/A'
   };
 
   return (
@@ -141,22 +133,9 @@ const FunctionalSchoolDashboard: React.FC = () => {
                 <CardHeader>
                   <CardTitle>Recent Student Activity</CardTitle>
                 </CardHeader>
-                <CardContent>
-                  <div className="space-y-4">
-                    {recentActivity.map((activity, index) => (
-                      <div key={index} className="flex items-center justify-between p-3 bg-muted/50 rounded-lg">
-                        <div>
-                          <p className="font-medium">{activity.student}</p>
-                          <p className="text-sm text-muted-foreground">{activity.action}</p>
-                          <p className="text-xs text-muted-foreground">{activity.date}</p>
-                        </div>
-                        <Badge variant={activity.status === 'success' ? 'default' : 'outline'}>
-                          {activity.status === 'success' ? <CheckCircle className="h-3 w-3 mr-1" /> : <Clock className="h-3 w-3 mr-1" />}
-                          {activity.status}
-                        </Badge>
-                      </div>
-                    ))}
-                  </div>
+                <CardContent className="text-center py-8">
+                  <TrendingUp className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
+                  <p className="text-muted-foreground">No recent activity</p>
                 </CardContent>
               </Card>
 
@@ -207,19 +186,19 @@ const FunctionalSchoolDashboard: React.FC = () => {
                     <div className="space-y-3">
                       <div className="flex justify-between">
                         <span>Grade 9:</span>
-                        <span className="font-semibold">245 students</span>
+                        <span className="font-semibold">0 students</span>
                       </div>
                       <div className="flex justify-between">
                         <span>Grade 10:</span>
-                        <span className="font-semibold">289 students</span>
+                        <span className="font-semibold">0 students</span>
                       </div>
                       <div className="flex justify-between">
                         <span>Grade 11:</span>
-                        <span className="font-semibold">356 students</span>
+                        <span className="font-semibold">0 students</span>
                       </div>
                       <div className="flex justify-between">
                         <span>Grade 12:</span>
-                        <span className="font-semibold">355 students</span>
+                        <span className="font-semibold">0 students</span>
                       </div>
                     </div>
                   </CardContent>
@@ -233,19 +212,19 @@ const FunctionalSchoolDashboard: React.FC = () => {
                     <div className="space-y-3">
                       <div className="flex justify-between">
                         <span>Preparing:</span>
-                        <span className="font-semibold text-yellow-600">156</span>
+                        <span className="font-semibold text-yellow-600">0</span>
                       </div>
                       <div className="flex justify-between">
                         <span>Submitted:</span>
-                        <span className="font-semibold text-blue-600">89</span>
+                        <span className="font-semibold text-blue-600">0</span>
                       </div>
                       <div className="flex justify-between">
                         <span>Accepted:</span>
-                        <span className="font-semibold text-green-600">67</span>
+                        <span className="font-semibold text-green-600">0</span>
                       </div>
                       <div className="flex justify-between">
                         <span>With Scholarships:</span>
-                        <span className="font-semibold text-purple-600">45</span>
+                        <span className="font-semibold text-purple-600">0</span>
                       </div>
                     </div>
                   </CardContent>
@@ -259,19 +238,19 @@ const FunctionalSchoolDashboard: React.FC = () => {
                     <div className="space-y-3">
                       <div className="flex justify-between">
                         <span>USA:</span>
-                        <span className="font-semibold">34 students</span>
+                        <span className="font-semibold">0 students</span>
                       </div>
                       <div className="flex justify-between">
                         <span>UK:</span>
-                        <span className="font-semibold">18 students</span>
+                        <span className="font-semibold">0 students</span>
                       </div>
                       <div className="flex justify-between">
                         <span>Canada:</span>
-                        <span className="font-semibold">12 students</span>
+                        <span className="font-semibold">0 students</span>
                       </div>
                       <div className="flex justify-between">
                         <span>Australia:</span>
-                        <span className="font-semibold">8 students</span>
+                        <span className="font-semibold">0 students</span>
                       </div>
                     </div>
                   </CardContent>
@@ -283,31 +262,13 @@ const FunctionalSchoolDashboard: React.FC = () => {
           <TabsContent value="partnerships">
             <div className="space-y-6">
               <h2 className="text-2xl font-bold">University Partnerships</h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {partnerships.map((partnership, index) => (
-                  <Card key={index}>
-                    <CardHeader>
-                      <div className="flex items-center justify-between">
-                        <CardTitle className="text-lg">{partnership.name}</CardTitle>
-                        <Badge className="bg-green-100 text-green-800">
-                          {partnership.status}
-                        </Badge>
-                      </div>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="space-y-2">
-                        <p className="text-sm text-muted-foreground">
-                          Students placed: <span className="font-semibold">{partnership.students}</span>
-                        </p>
-                        <div className="flex gap-2">
-                          <Button size="sm" variant="outline">View Details</Button>
-                          <Button size="sm" variant="outline">Contact</Button>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
+              <Card>
+                <CardContent className="text-center py-12">
+                  <Building className="h-16 w-16 mx-auto text-muted-foreground mb-4" />
+                  <h3 className="text-lg font-semibold mb-2">No Partnerships Yet</h3>
+                  <p className="text-muted-foreground">Start building university partnerships to expand opportunities.</p>
+                </CardContent>
+              </Card>
             </div>
           </TabsContent>
 
@@ -321,9 +282,9 @@ const FunctionalSchoolDashboard: React.FC = () => {
                   </CardHeader>
                   <CardContent>
                     <div className="text-center py-8">
-                      <TrendingUp className="h-12 w-12 mx-auto text-green-500 mb-4" />
-                      <p className="text-2xl font-bold text-green-600">+15%</p>
-                      <p className="text-muted-foreground">Improvement from last year</p>
+                      <TrendingUp className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
+                      <p className="text-2xl font-bold text-muted-foreground">N/A</p>
+                      <p className="text-muted-foreground">No historical data available</p>
                     </div>
                   </CardContent>
                 </Card>
@@ -337,16 +298,16 @@ const FunctionalSchoolDashboard: React.FC = () => {
                       <div className="space-y-2">
                         <div className="flex justify-between">
                           <span>Applications:</span>
-                          <span className="font-semibold">89 (↑12%)</span>
+                          <span className="font-semibold">0</span>
                         </div>
-                        <Progress value={75} />
+                        <Progress value={0} />
                       </div>
                       <div className="space-y-2">
                         <div className="flex justify-between">
                           <span>Acceptances:</span>
-                          <span className="font-semibold">67 (↑8%)</span>
+                          <span className="font-semibold">0</span>
                         </div>
-                        <Progress value={65} />
+                        <Progress value={0} />
                       </div>
                     </div>
                   </CardContent>

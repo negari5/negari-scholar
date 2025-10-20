@@ -20,26 +20,23 @@ const FunctionalParentDashboard: React.FC = () => {
     return <InfoSection userType="parent" />;
   }
 
+  // TODO: Fetch from database
   const childProgress = {
-    name: 'Almaz Tadesse',
-    grade: 'Grade 11',
-    gpa: '3.8/4.0',
-    applications: 5,
-    scholarships: 12,
-    completionRate: 75
+    name: 'Your Child',
+    grade: 'N/A',
+    gpa: 'N/A',
+    applications: 0,
+    scholarships: 0,
+    completionRate: 0
   };
 
-  const upcomingDeadlines = [
-    { scholarship: 'Oxford Scholarship', date: 'Dec 15, 2024', status: 'pending' },
-    { scholarship: 'Harvard Application', date: 'Jan 1, 2025', status: 'draft' },
-    { scholarship: 'MIT Early Decision', date: 'Nov 30, 2024', status: 'submitted' },
-  ];
+  const upcomingDeadlines: any[] = [];
 
   const financialOverview = {
-    estimatedCost: 45000,
-    scholarshipPotential: 30000,
-    familyContribution: 15000,
-    savingsProgress: 60
+    estimatedCost: 0,
+    scholarshipPotential: 0,
+    familyContribution: 0,
+    savingsProgress: 0
   };
 
   return (
@@ -111,20 +108,9 @@ const FunctionalParentDashboard: React.FC = () => {
                 <CardHeader>
                   <CardTitle>Upcoming Deadlines</CardTitle>
                 </CardHeader>
-                <CardContent>
-                  <div className="space-y-3">
-                    {upcomingDeadlines.map((deadline, index) => (
-                      <div key={index} className="flex items-center justify-between p-3 bg-muted/50 rounded-lg">
-                        <div>
-                          <p className="font-medium">{deadline.scholarship}</p>
-                          <p className="text-sm text-muted-foreground">{deadline.date}</p>
-                        </div>
-                        <Badge variant={deadline.status === 'submitted' ? 'default' : 'outline'}>
-                          {deadline.status}
-                        </Badge>
-                      </div>
-                    ))}
-                  </div>
+                <CardContent className="text-center py-8">
+                  <Clock className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
+                  <p className="text-muted-foreground">No upcoming deadlines</p>
                 </CardContent>
               </Card>
 
@@ -134,24 +120,9 @@ const FunctionalParentDashboard: React.FC = () => {
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-4">
-                    <div className="flex justify-between">
-                      <span>Estimated Annual Cost:</span>
-                      <span className="font-semibold">${financialOverview.estimatedCost.toLocaleString()}</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span>Scholarship Potential:</span>
-                      <span className="font-semibold text-green-600">${financialOverview.scholarshipPotential.toLocaleString()}</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span>Family Contribution:</span>
-                      <span className="font-semibold">${financialOverview.familyContribution.toLocaleString()}</span>
-                    </div>
-                    <div className="space-y-2">
-                      <div className="flex justify-between">
-                        <span>Savings Progress:</span>
-                        <span className="font-semibold">{financialOverview.savingsProgress}%</span>
-                      </div>
-                      <Progress value={financialOverview.savingsProgress} />
+                    <div className="text-center py-8">
+                      <DollarSign className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
+                      <p className="text-muted-foreground">Financial planning data not available yet</p>
                     </div>
                   </div>
                 </CardContent>
@@ -179,7 +150,7 @@ const FunctionalParentDashboard: React.FC = () => {
                       </div>
                       <div className="flex justify-between">
                         <span>Class Rank:</span>
-                        <span className="font-semibold">Top 5%</span>
+                        <span className="font-semibold">N/A</span>
                       </div>
                     </div>
                   </CardContent>
@@ -193,15 +164,15 @@ const FunctionalParentDashboard: React.FC = () => {
                     <div className="space-y-3">
                       <div className="flex justify-between">
                         <span>Submitted:</span>
-                        <span className="font-semibold text-green-600">2</span>
+                        <span className="font-semibold text-green-600">0</span>
                       </div>
                       <div className="flex justify-between">
                         <span>In Progress:</span>
-                        <span className="font-semibold text-yellow-600">3</span>
+                        <span className="font-semibold text-yellow-600">0</span>
                       </div>
                       <div className="flex justify-between">
                         <span>Planned:</span>
-                        <span className="font-semibold text-blue-600">5</span>
+                        <span className="font-semibold text-blue-600">0</span>
                       </div>
                     </div>
                   </CardContent>
@@ -215,15 +186,15 @@ const FunctionalParentDashboard: React.FC = () => {
                     <div className="space-y-3">
                       <div className="flex justify-between">
                         <span>SAT:</span>
-                        <span className="font-semibold">1450/1600</span>
+                        <span className="font-semibold">N/A</span>
                       </div>
                       <div className="flex justify-between">
                         <span>IELTS:</span>
-                        <span className="font-semibold">7.5/9.0</span>
+                        <span className="font-semibold">N/A</span>
                       </div>
                       <div className="flex justify-between">
                         <span>TOEFL:</span>
-                        <span className="font-semibold">105/120</span>
+                        <span className="font-semibold">N/A</span>
                       </div>
                     </div>
                   </CardContent>
@@ -241,28 +212,9 @@ const FunctionalParentDashboard: React.FC = () => {
                     <CardTitle>Cost Breakdown</CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <div className="space-y-4">
-                      <div className="flex justify-between">
-                        <span>Tuition & Fees:</span>
-                        <span className="font-semibold">$35,000</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span>Room & Board:</span>
-                        <span className="font-semibold">$8,000</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span>Books & Supplies:</span>
-                        <span className="font-semibold">$1,500</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span>Personal Expenses:</span>
-                        <span className="font-semibold">$500</span>
-                      </div>
-                      <hr />
-                      <div className="flex justify-between text-lg font-bold">
-                        <span>Total Annual Cost:</span>
-                        <span>${financialOverview.estimatedCost.toLocaleString()}</span>
-                      </div>
+                    <div className="text-center py-8">
+                      <DollarSign className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
+                      <p className="text-muted-foreground">Cost breakdown not available yet</p>
                     </div>
                   </CardContent>
                 </Card>
@@ -272,28 +224,9 @@ const FunctionalParentDashboard: React.FC = () => {
                     <CardTitle>Funding Strategy</CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <div className="space-y-4">
-                      <div className="space-y-2">
-                        <div className="flex justify-between">
-                          <span>Scholarships:</span>
-                          <span className="font-semibold text-green-600">$30,000 (67%)</span>
-                        </div>
-                        <Progress value={67} className="h-2" />
-                      </div>
-                      <div className="space-y-2">
-                        <div className="flex justify-between">
-                          <span>Family Savings:</span>
-                          <span className="font-semibold text-blue-600">$10,000 (22%)</span>
-                        </div>
-                        <Progress value={22} className="h-2" />
-                      </div>
-                      <div className="space-y-2">
-                        <div className="flex justify-between">
-                          <span>Student Loans:</span>
-                          <span className="font-semibold text-orange-600">$5,000 (11%)</span>
-                        </div>
-                        <Progress value={11} className="h-2" />
-                      </div>
+                    <div className="text-center py-8">
+                      <Target className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
+                      <p className="text-muted-foreground">Funding strategy not configured yet</p>
                     </div>
                   </CardContent>
                 </Card>
