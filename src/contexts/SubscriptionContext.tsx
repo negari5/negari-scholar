@@ -8,6 +8,7 @@ export interface Subscription {
   trialDays: number;
   features: string[];
   popular: boolean;
+  recommended: boolean;
   color: string;
   currency: string;
   is_active: boolean;
@@ -35,6 +36,7 @@ const defaultSubscriptions: Subscription[] = [
       'Community access'
     ],
     popular: false,
+    recommended: false,
     color: 'border-muted',
     currency: 'USD',
     is_active: true
@@ -52,6 +54,7 @@ const defaultSubscriptions: Subscription[] = [
       'Monthly webinars'
     ],
     popular: false,
+    recommended: false,
     color: 'border-primary',
     currency: 'USD',
     is_active: true
@@ -71,6 +74,7 @@ const defaultSubscriptions: Subscription[] = [
       'Interview preparation'
     ],
     popular: true,
+    recommended: true,
     color: 'border-secondary',
     currency: 'USD',
     is_active: true
@@ -90,6 +94,7 @@ const defaultSubscriptions: Subscription[] = [
       '24/7 phone support'
     ],
     popular: false,
+    recommended: false,
     color: 'border-accent',
     currency: 'USD',
     is_active: true

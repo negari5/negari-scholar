@@ -29,6 +29,8 @@ const SubscriptionPlans: React.FC<SubscriptionPlansProps> = ({ onSelectPlan }) =
               key={plan.id}
               className={`relative hover:shadow-lg transition-all duration-200 ${
                 plan.popular ? 'border-negari-orange border-2' : ''
+              } ${
+                plan.recommended ? 'ring-2 ring-negari-indigo' : ''
               }`}
             >
               {plan.popular && (
@@ -39,9 +41,18 @@ const SubscriptionPlans: React.FC<SubscriptionPlansProps> = ({ onSelectPlan }) =
                   </Badge>
                 </div>
               )}
+              {plan.recommended && (
+                <div className="absolute -top-4 right-4">
+                  <Badge className="bg-negari-indigo text-white font-bold">
+                    Recommended
+                  </Badge>
+                </div>
+              )}
               
               <CardHeader className="text-center pb-4">
-                <CardTitle className="text-xl text-negari-indigo">{plan.name}</CardTitle>
+                <CardTitle className={`text-xl text-negari-indigo ${plan.recommended ? 'font-bold' : ''}`}>
+                  {plan.name}
+                </CardTitle>
                 <CardDescription>
                   <div className="mt-4">
                     <span className="text-4xl font-bold text-negari-indigo">

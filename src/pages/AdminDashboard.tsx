@@ -1983,6 +1983,13 @@ const AdminDashboard: React.FC = () => {
                         />
                         <Label>Active</Label>
                       </div>
+                      <div className="flex items-center space-x-2">
+                        <Switch
+                          checked={subscription.recommended}
+                          onCheckedChange={(checked) => updateSubscription(subscription.id, { recommended: checked })}
+                        />
+                        <Label>Recommended</Label>
+                      </div>
                     </div>
                   </CardHeader>
                   <CardContent>
@@ -2063,6 +2070,7 @@ const AdminDashboard: React.FC = () => {
                     trialDays: parseInt(formData.get('trial_days') as string) || 0,
                     features: (formData.get('features') as string).split('\n').filter(f => f.trim()),
                     popular: false,
+                    recommended: false,
                     color: 'border-primary',
                     currency: formData.get('currency') as string,
                     is_active: true

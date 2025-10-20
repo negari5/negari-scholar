@@ -65,24 +65,35 @@ const FunctionalStudentDashboard: React.FC = () => {
         .limit(10);
       setScholarships(scholarshipsData || []);
 
-      // Fetch applications
+      // Fetch applications with scholarships
       const { data: applicationsData } = await supabase
         .from('applications')
-        .select(`
-          *,
-          scholarship:scholarships(title, university, deadline)
-        `)
+        .select('*')
         .eq('user_id', user.id)
         .order('created_at', { ascending: false });
-      setApplications(applicationsData || []);
+      
+      // Fetch scholarship details for applications
+      if (applicationsData && applicationsData.length > 0) {
+        const scholarshipIds = applicationsData.map(app => app.scholarship_id);
+        const { data: scholarshipsForApps } = await supabase
+          .from('scholarships')
+          .select('id, title, university, deadline')
+          .in('id', scholarshipIds);
+        
+        // Map scholarships to applications
+        const appsWithScholarships = applicationsData.map(app => ({
+          ...app,
+          scholarship: scholarshipsForApps?.find(s => s.id === app.scholarship_id)
+        }));
+        setApplications(appsWithScholarships);
+      } else {
+        setApplications([]);
+      }
 
       // Fetch mentor sessions
       const { data: sessionsData } = await supabase
         .from('mentor_sessions')
-        .select(`
-          *,
-          mentor:mentor_id(full_name)
-        `)
+        .select('*')
         .eq('student_id', user.id)
         .order('session_date', { ascending: true });
       setMentorSessions(sessionsData || []);
