@@ -16,10 +16,6 @@ const FunctionalParentDashboard: React.FC = () => {
   const [activeTab, setActiveTab] = useState('home');
   const { t } = useLanguage();
 
-  if (activeTab === 'info') {
-    return <InfoSection userType="parent" />;
-  }
-
   // TODO: Fetch from database
   const childProgress = {
     name: 'Your Child',
@@ -38,6 +34,37 @@ const FunctionalParentDashboard: React.FC = () => {
     familyContribution: 0,
     savingsProgress: 0
   };
+
+  if (activeTab === 'info') {
+    return (
+      <div className="min-h-screen bg-background">
+        <header className="border-b bg-card/50 backdrop-blur-sm sticky top-0 z-50">
+          <div className="container mx-auto px-6 py-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <img 
+                  src="/lovable-uploads/8100b743-8748-46c8-952a-e50f9e5f88e0.png" 
+                  alt="Negari Logo" 
+                  className="h-10 w-10"
+                />
+                <div>
+                  <h1 className="font-comfortaa font-bold text-xl text-primary">Parent Dashboard</h1>
+                  <p className="text-sm text-muted-foreground">Supporting {childProgress.name}'s Journey</p>
+                </div>
+              </div>
+              <div className="flex items-center gap-2">
+                <Button variant="outline" size="sm" onClick={() => setActiveTab('home')}>
+                  <HomeIcon className="h-4 w-4 mr-2" />Back to Dashboard
+                </Button>
+                <Badge variant="secondary">Parent</Badge>
+              </div>
+            </div>
+          </div>
+        </header>
+        <InfoSection userType="parent" />
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-background">

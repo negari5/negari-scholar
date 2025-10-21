@@ -14,6 +14,7 @@ import { useToast } from '@/hooks/use-toast';
 import SuperAdminSystemControls from '@/components/SuperAdminSystemControls';
 import AdminProfileEditor from '@/components/AdminProfileEditor';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
 import { Switch } from '@/components/ui/switch';
 import { 
   Users, Award, MessageSquare, Settings, Plus, Edit3, Trash2, 
@@ -521,8 +522,19 @@ const AdminDashboard: React.FC = () => {
     });
   };
 
+  const [deleteDialog, setDeleteDialog] = useState<{ open: boolean; table: string; id: string; itemName: string }>({ 
+    open: false, 
+    table: '', 
+    id: '', 
+    itemName: '' 
+  });
+
   const deleteItem = (table: string, id: string, itemName: string) => {
-    if (!confirm(`Are you sure you want to delete this ${itemName}?`)) return;
+    setDeleteDialog({ open: true, table, id, itemName });
+  };
+
+  const confirmDelete = () => {
+    const { table, id, itemName } = deleteDialog;
 
     try {
       if (table === 'scholarships') {
@@ -546,6 +558,7 @@ const AdminDashboard: React.FC = () => {
         variant: "destructive"
       });
     }
+    setDeleteDialog({ open: false, table: '', id: '', itemName: '' });
   };
 
   const resetScholarshipForm = () => {
@@ -1121,27 +1134,10 @@ const AdminDashboard: React.FC = () => {
 
               <Card>
                 <CardHeader>
-                  <CardTitle>Monthly Stats</CardTitle>
+                  <CardTitle>Recent Activity</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <div className="space-y-3">
-                    <div className="flex items-center justify-between">
-                      <span className="text-sm">New Users</span>
-                      <span className="font-semibold text-green-600">+127</span>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <span className="text-sm">Applications</span>
-                      <span className="font-semibold text-blue-600">+89</span>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <span className="text-sm">Scholarships</span>
-                      <span className="font-semibold text-purple-600">+15</span>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <span className="text-sm">Success Rate</span>
-                      <span className="font-semibold text-secondary ">78%</span>
-                    </div>
-                  </div>
+                  <p className="text-sm text-muted-foreground">Activity data will be displayed here once users interact with the platform.</p>
                 </CardContent>
               </Card>
 
@@ -2976,7 +2972,24 @@ const AdminDashboard: React.FC = () => {
       </div>
       
       {/* Dialogs */}
-      <ViewWebsiteSelector 
+      <AlertDialog open={deleteDialog.open} onOpenChange={(open) => !open && setDeleteDialog({ open: false, table: '', id: '', itemName: '' })}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+            <AlertDialogDescription>
+              This will permanently delete this {deleteDialog.itemName}. This action cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={confirmDelete} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
+              Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      <ViewWebsiteSelector
         open={showViewWebsiteDialog}
         onOpenChange={setShowViewWebsiteDialog}
         onSelectPage={handleViewWebsitePage}

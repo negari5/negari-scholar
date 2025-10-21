@@ -176,7 +176,7 @@ const LandingPage = () => {
           </div>
 
           {/* Scroll Indicator */}
-          <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce-gentle">
+          <div className="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce-gentle">
             <div className="flex flex-col items-center text-white/60">
               <span className="text-sm mb-2">Scroll to explore</span>
               <ChevronDown className="w-6 h-6" />
@@ -493,53 +493,6 @@ const LandingPage = () => {
       <section className="py-20 bg-gradient-to-br from-primary/5 to-secondary/5">
         <div className="container mx-auto px-6">
           <SubscriptionPlans onSelectPlan={(plan) => setShowAuthModal(true)} />
-          <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-comfortaa font-bold text-gray-900 mb-6">
-              Choose Your Plan
-            </h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Start with a free trial and find the perfect plan for your educational journey
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-            {subscriptions.map((plan) => (
-              <Card key={plan.id} className={`relative hover:shadow-2xl transition-all duration-300 ${plan.popular ? 'scale-105 border-2 border-secondary' : plan.color}`}>
-                {plan.popular && (
-                  <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
-                    <Badge className="bg-secondary text-white px-4 py-1">Most Popular</Badge>
-                  </div>
-                )}
-                <CardHeader className="text-center pb-4">
-                  <CardTitle className="text-2xl font-comfortaa text-gray-900">{plan.name}</CardTitle>
-                  <div className="mt-4">
-                    <span className="text-4xl font-bold text-gray-900">${plan.price}</span>
-                    <span className="text-gray-600">{plan.duration}</span>
-                  </div>
-                  <Badge variant="outline" className="mt-2">
-                    <Clock className="h-3 w-3 mr-1" />
-                    {plan.trialDays} days free trial
-                  </Badge>
-                </CardHeader>
-                <CardContent>
-                  <ul className="space-y-3 mb-8">
-                    {plan.features.map((feature, index) => (
-                      <li key={index} className="flex items-center gap-3">
-                        <div className="w-2 h-2 bg-secondary rounded-full shrink-0"></div>
-                        <span className="text-sm text-gray-700">{feature}</span>
-                      </li>
-                    ))}
-                  </ul>
-                  <Button 
-                    className={`w-full ${plan.popular ? 'bg-secondary hover:bg-secondary/90' : 'bg-primary hover:bg-primary/90'} text-white`}
-                    onClick={() => setShowAuthModal(true)}
-                  >
-                    Start Free Trial
-                  </Button>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
         </div>
       </section>
 

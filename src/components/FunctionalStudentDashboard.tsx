@@ -4,7 +4,8 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Input } from '@/components/ui/input';
-import { 
+import { useLanguage } from '@/contexts/LanguageContext';
+import {
   BookOpen, Target, Award, Calendar, FileText, 
   Users, MessageCircle, TrendingUp, GraduationCap,
   Search, Filter, Plus, Eye, Edit, Trash2,
@@ -34,6 +35,7 @@ const FunctionalStudentDashboard: React.FC = () => {
   const [profile, setProfile] = useState<any>(null);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [applicationToDelete, setApplicationToDelete] = useState<string | null>(null);
+  const { t } = useLanguage();
   const navigate = useNavigate();
 
   useEffect(() => {

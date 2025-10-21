@@ -25,7 +25,34 @@ const FunctionalMentorDashboard: React.FC = () => {
   const menteeData: any[] = [];
 
   if (showInfo) {
-    return <InfoSection userType="mentor" />;
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-background via-background to-secondary/5">
+        <header className="border-b bg-card/80 backdrop-blur-md sticky top-0 z-50">
+          <div className="container mx-auto px-4 lg:px-6 py-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <img 
+                  src="/lovable-uploads/8100b743-8748-46c8-952a-e50f9e5f88e0.png" 
+                  alt="Negari Logo" 
+                  className="h-8 w-8 lg:h-10 lg:w-10"
+                />
+                <div>
+                  <h1 className="font-comfortaa font-bold text-lg lg:text-xl text-primary">Mentor Dashboard</h1>
+                  <p className="text-xs lg:text-sm text-muted-foreground hidden sm:block">Welcome back, Dr. Alemayehu</p>
+                </div>
+              </div>
+              <div className="flex items-center gap-2">
+                <Button variant="outline" size="sm" onClick={() => setShowInfo(false)}>
+                  <Home className="h-4 w-4 lg:mr-2" />{!isMobile && 'Back to Dashboard'}
+                </Button>
+                <Badge variant="secondary">Mentor</Badge>
+              </div>
+            </div>
+          </div>
+        </header>
+        <InfoSection userType="mentor" />
+      </div>
+    );
   }
 
   return (

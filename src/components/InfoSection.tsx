@@ -23,30 +23,21 @@ const InfoSection: React.FC<InfoSectionProps> = ({ userType }) => {
               title: 'Quick Stats',
               icon: <Award className="h-5 w-5" />,
               items: [
-                'Active Applications: 5',
-                'Scholarships Found: 127',
-                'Completion Rate: 85%',
-                'Mentor Sessions: 12'
+                'No data available yet. Start your journey to see your stats!'
               ]
             },
             {
               title: 'Upcoming Deadlines',
               icon: <Calendar className="h-5 w-5" />,
               items: [
-                'Oxford Scholarship - Dec 15, 2024',
-                'Harvard Application - Jan 1, 2025',
-                'MIT Early Decision - Nov 30, 2024',
-                'Cambridge Interview - Dec 20, 2024'
+                'No upcoming deadlines. Add scholarship applications to track deadlines.'
               ]
             },
             {
               title: 'Recent Activity',
               icon: <CheckCircle className="h-5 w-5" />,
               items: [
-                'Completed IELTS prep course',
-                'Submitted MIT application',
-                'Mentor meeting scheduled',
-                'Profile updated'
+                'No recent activity. Start exploring scholarships and resources!'
               ]
             }
           ]
@@ -60,30 +51,21 @@ const InfoSection: React.FC<InfoSectionProps> = ({ userType }) => {
               title: 'Mentoring Stats',
               icon: <Users className="h-5 w-5" />,
               items: [
-                'Active Mentees: 8',
-                'Success Rate: 92%',
-                'Total Sessions: 156',
-                'Hours Contributed: 234'
+                'No mentees assigned yet. Start accepting mentoring requests!'
               ]
             },
             {
               title: 'Upcoming Sessions',
               icon: <Calendar className="h-5 w-5" />,
               items: [
-                'Sarah K. - Application Review - Today 3:00 PM',
-                'Michael A. - Essay Feedback - Tomorrow 10:00 AM',
-                'Hanan B. - Interview Prep - Dec 10, 2:00 PM',
-                'Group Session - Scholarship Tips - Dec 12, 4:00 PM'
+                'No upcoming sessions. Schedule sessions with your mentees!'
               ]
             },
             {
               title: 'Recognition',
               icon: <Star className="h-5 w-5" />,
               items: [
-                'Top Mentor - October 2024',
-                'Student Success Award',
-                '5-Star Rating Average',
-                '50+ Students Helped'
+                'Your achievements will be displayed here as you mentor students.'
               ]
             }
           ]
@@ -97,30 +79,21 @@ const InfoSection: React.FC<InfoSectionProps> = ({ userType }) => {
               title: 'Your Child\'s Progress',
               icon: <Users className="h-5 w-5" />,
               items: [
-                'Child: Almaz Tadesse (Grade 11)',
-                'Applications in Progress: 3',
-                'Scholarships Applied: 7',
-                'Current GPA: 3.8/4.0'
+                'Link your child\'s account to view their progress here.'
               ]
             },
             {
               title: 'Financial Planning',
               icon: <FileText className="h-5 w-5" />,
               items: [
-                'Estimated Total Cost: $45,000/year',
-                'Scholarship Potential: $30,000/year',
-                'Family Contribution: $15,000/year',
-                'Savings Goal: 60% Complete'
+                'Financial planning tools will be available once your child starts applications.'
               ]
             },
             {
               title: 'Support Resources',
               icon: <Info className="h-5 w-5" />,
               items: [
-                'Parent Support Groups',
-                'Financial Aid Webinars',
-                'University Information Sessions',
-                'Visa Application Guide'
+                'Access parent support resources and guides in the resources section.'
               ]
             }
           ]
@@ -134,30 +107,21 @@ const InfoSection: React.FC<InfoSectionProps> = ({ userType }) => {
               title: 'Institution Stats',
               icon: <Award className="h-5 w-5" />,
               items: [
-                'Registered Students: 1,245',
-                'Success Rate: 78%',
-                'Active Partnerships: 25',
-                'Scholarship Winners: 89 this year'
+                'Your school statistics will appear here as students register.'
               ]
             },
             {
               title: 'Representative Info',
               icon: <Users className="h-5 w-5" />,
               items: [
-                'Name: Dr. Kebede Alemu',
-                'Position: International Programs Director',
-                'Email: k.alemu@school.edu.et',
-                'Phone: +251-911-123456'
+                'Update your school representative information in settings.'
               ]
             },
             {
               title: 'Partnership Benefits',
               icon: <CheckCircle className="h-5 w-5" />,
               items: [
-                'Student tracking dashboard',
-                'Performance analytics',
-                'Staff training programs',
-                'Global university connections'
+                'Explore partnership benefits and features available to schools.'
               ]
             }
           ]
