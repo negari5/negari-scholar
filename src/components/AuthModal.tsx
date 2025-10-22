@@ -237,7 +237,44 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
               </div>
               
               <div className="space-y-2">
-                <Label htmlFor="password" className="text-gray-700 font-medium">Password</Label>
+                <div className="flex items-center justify-between">
+                  <Label htmlFor="password" className="text-gray-700 font-medium">Password</Label>
+                  {isLogin && (
+                    <button
+                      type="button"
+                      onClick={async () => {
+                        if (!email) {
+                          toast({
+                            title: "Email Required",
+                            description: "Please enter your email address first.",
+                            variant: "destructive"
+                          });
+                          return;
+                        }
+                        try {
+                          const { supabase } = await import('@/integrations/supabase/client');
+                          const { error } = await supabase.auth.resetPasswordForEmail(email, {
+                            redirectTo: `${window.location.origin}/reset-password`,
+                          });
+                          if (error) throw error;
+                          toast({
+                            title: "Email Sent",
+                            description: "Check your email for the password reset link.",
+                          });
+                        } catch (error) {
+                          toast({
+                            title: "Error",
+                            description: "Failed to send reset email. Please try again.",
+                            variant: "destructive"
+                          });
+                        }
+                      }}
+                      className="text-xs text-sky-500 hover:text-sky-600 transition-colors"
+                    >
+                      Forgot Password?
+                    </button>
+                  )}
+                </div>
                 <Input
                   id="password"
                   type="password"

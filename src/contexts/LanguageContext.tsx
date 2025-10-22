@@ -49,7 +49,17 @@ const translations: Record<string, Record<string, string>> = {
     'support_dreams': 'Support Your Child\'s Global Education Dreams',
     'parent_desc': 'Get the tools, resources, and support you need to guide your child through their international education journey.',
     'empower_institution': 'Empower Your Institution\'s Global Impact',
-    'school_desc': 'Partner with Negari to enhance your school\'s international education programs and track student success on a global scale.'
+    'school_desc': 'Partner with Negari to enhance your school\'s international education programs and track student success on a global scale.',
+    'recent_activity': 'Recent Activity',
+    'system_health': 'System Health',
+    'newsletter_management': 'Newsletter Management',
+    'footer_settings': 'Footer Settings',
+    'forgot_password': 'Forgot Password?',
+    'email': 'Email',
+    'password': 'Password',
+    'login': 'Login',
+    'signup': 'Sign Up',
+    'welcome_back': 'Welcome Back',
   },
   am: {
     'start_journey': 'ጉዞዎን ይጀምሩ',

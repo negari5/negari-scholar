@@ -12,10 +12,12 @@ import SubscriptionPlans from "@/components/SubscriptionPlans";
 import { useSubscriptions } from '@/contexts/SubscriptionContext';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useEffect, useState } from "react";
+import { useToast } from "@/hooks/use-toast";
 const LandingPage = () => {
   const { profile } = useAuth();
   const { subscriptions } = useSubscriptions();
   const { t } = useLanguage();
+  const { toast } = useToast();
   const [isScrolled, setIsScrolled] = useState(false);
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [showAssessment, setShowAssessment] = useState(false);
@@ -176,7 +178,7 @@ const LandingPage = () => {
           </div>
 
           {/* Scroll Indicator */}
-          <div className="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce-gentle">
+          <div className="absolute bottom-8 left-0 right-0 flex justify-center animate-bounce-gentle">
             <div className="flex flex-col items-center text-white/60">
               <span className="text-sm mb-2">Scroll to explore</span>
               <ChevronDown className="w-6 h-6" />
@@ -334,10 +336,53 @@ const LandingPage = () => {
           <div className="max-w-4xl mx-auto text-center">
             <h2 className="text-4xl md:text-5xl font-comfortaa font-bold text-gray-900 mb-6">{t('stay_updated')}</h2>
             <p className="text-xl text-gray-600 mb-12">{t('newsletter_desc')}</p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8 max-w-md mx-auto">
-              <Input type="email" placeholder={t('email_placeholder')} className="flex-1" />
-              <Button className="bg-sky-500 hover:bg-sky-600 text-white px-8">{t('subscribe_now')}</Button>
-            </div>
+            <form onSubmit={async (e) => {
+              e.preventDefault();
+              const formData = new FormData(e.currentTarget);
+              const email = formData.get('email') as string;
+              
+              try {
+                const { supabase } = await import('@/integrations/supabase/client');
+                const { error } = await supabase
+                  .from('newsletter_subscribers')
+                  .insert({ email });
+                
+                if (error) {
+                  if (error.code === '23505') {
+                    toast({
+                      title: "Already Subscribed",
+                      description: "This email is already subscribed to our newsletter.",
+                    });
+                  } else {
+                    throw error;
+                  }
+                } else {
+                  toast({
+                    title: "Successfully Subscribed!",
+                    description: "Thank you for subscribing to our newsletter.",
+                  });
+                  e.currentTarget.reset();
+                }
+              } catch (error) {
+                console.error('Newsletter subscription error:', error);
+                toast({
+                  title: "Subscription Failed",
+                  description: "Please try again later.",
+                  variant: "destructive"
+                });
+              }
+            }} className="flex flex-col sm:flex-row gap-4 justify-center mb-8 max-w-md mx-auto">
+              <Input 
+                type="email" 
+                name="email"
+                placeholder={t('email_placeholder')} 
+                className="flex-1"
+                required
+              />
+              <Button type="submit" className="bg-sky-500 hover:bg-sky-600 text-white px-8">
+                {t('subscribe_now')}
+              </Button>
+            </form>
             <div className="text-center mb-12">
               <Button 
                 variant="outline" 
