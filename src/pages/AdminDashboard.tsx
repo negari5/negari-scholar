@@ -265,8 +265,41 @@ const AdminDashboard: React.FC = () => {
     }
   }, [profile, isAdminUI]);
 
+  const fetchUsers = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('profiles')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+      if (error) throw error;
+
+      const formattedUsers: User[] = data?.map(profile => ({
+        id: profile.id,
+        email: profile.email || '',
+        first_name: profile.full_name?.split(' ')[0] || '',
+        last_name: profile.full_name?.split(' ').slice(1).join(' ') || '',
+        full_name: profile.full_name || '',
+        user_type: profile.account_type || 'student',
+        city: profile.address || '',
+        phone: profile.phone_number || '',
+        is_admin: false, // Would need to check user_roles table
+        is_super_admin: false, // Would need to check user_roles table
+        status: 'active',
+        created_at: profile.created_at
+      })) || [];
+
+      setUsers(formattedUsers);
+    } catch (error) {
+      console.error('Error fetching users:', error);
+    }
+  };
+
   const fetchData = async () => {
     try {
+      // Fetch users
+      await fetchUsers();
+
       // Fetch real activity data from database
       const { data: usersData } = await supabase
         .from('profiles')
@@ -282,61 +315,20 @@ const AdminDashboard: React.FC = () => {
       
       setRecentActivity(activity);
 
-      // Check system health
-      const healthCheck = await fetch('/api/health-check').catch(() => null);
+      // Check system health by attempting a simple query
+      const { error: healthError } = await supabase
+        .from('profiles')
+        .select('count')
+        .limit(1);
+
       setSystemHealth({
-        serverStatus: healthCheck ? 'online' : 'checking',
-        databaseStatus: 'connected',
+        serverStatus: 'online',
+        databaseStatus: healthError ? 'error' : 'connected',
         apiResponse: 'fast',
         lastBackup: new Date(Date.now() - 2 * 60 * 60 * 1000) // 2 hours ago
       });
 
-      // Mock data
-      const mockUsers: User[] = [
-        {
-          id: '1',
-          email: 'negari@gmail.com',
-          first_name: 'Super',
-          last_name: 'Admin',
-          full_name: 'Super Admin',
-          user_type: 'super_admin',
-          city: 'System City',
-          phone: '+1234567890',
-          is_admin: true,
-          is_super_admin: true,
-          status: 'active',
-          created_at: new Date().toISOString()
-        },
-        {
-          id: '2',
-          email: 'student@test.com',
-          first_name: 'Test',
-          last_name: 'Student',
-          full_name: 'Test Student',
-          user_type: 'student',
-          city: 'Test City',
-          phone: '+1234567891',
-          is_admin: false,
-          is_super_admin: false,
-          status: 'active',
-          created_at: new Date().toISOString()
-        },
-        {
-          id: '3',
-          email: 'parent@test.com',
-          first_name: 'Test',
-          last_name: 'Parent',
-          full_name: 'Test Parent',
-          user_type: 'parent',
-          city: 'Parent City',
-          phone: '+1234567892',
-          is_admin: false,
-          is_super_admin: false,
-          status: 'archived',
-          created_at: new Date().toISOString()
-        }
-      ];
-
+      // Mock data for scholarships and announcements (can be replaced with real data later)
       const mockScholarships: Scholarship[] = [
         {
           id: '1',
@@ -384,7 +376,7 @@ const AdminDashboard: React.FC = () => {
       ];
 
       // Remove mockSubscriptions setup since we use context
-      setUsers(mockUsers);
+      // Users are already fetched via fetchUsers()
       setScholarships(mockScholarships);
       setAnnouncements(mockAnnouncements);
       setAds(mockAds);
@@ -467,6 +459,19 @@ const AdminDashboard: React.FC = () => {
     e.preventDefault();
     try {
       if (editingItem) {
+        // Update existing user in profiles table
+        const { error } = await supabase
+          .from('profiles')
+          .update({
+            full_name: `${userForm.first_name} ${userForm.last_name}`.trim(),
+            phone_number: userForm.phone || null,
+            address: userForm.city || null,
+            account_type: userForm.user_type
+          })
+          .eq('id', editingItem.id);
+
+        if (error) throw error;
+
         setUsers(prev => prev.map(u => 
           u.id === editingItem.id ? { 
             ...u, 
@@ -476,23 +481,37 @@ const AdminDashboard: React.FC = () => {
         ));
         toast({ title: "Success", description: "User updated successfully." });
       } else {
-        const newUser: User = {
-          id: Date.now().toString(),
-          ...userForm,
-          full_name: `${userForm.first_name} ${userForm.last_name}`.trim(),
-          is_super_admin: false,
-          status: 'active',
-          created_at: new Date().toISOString()
-        };
-        setUsers(prev => [newUser, ...prev]);
-        toast({ title: "Success", description: "User created successfully." });
+        // Create new user via edge function
+        const { data, error } = await supabase.functions.invoke('create-user-with-email', {
+          body: {
+            email: userForm.email,
+            firstName: userForm.first_name,
+            lastName: userForm.last_name,
+            phone: userForm.phone,
+            city: userForm.city,
+            userType: userForm.user_type,
+            isAdmin: userForm.is_admin
+          }
+        });
+
+        if (error) throw error;
+
+        toast({ 
+          title: "Success", 
+          description: `User created successfully. Login credentials sent to ${userForm.email}`,
+          duration: 5000
+        });
+
+        // Refresh users list
+        fetchUsers();
       }
 
       resetUserForm();
-    } catch (error) {
+    } catch (error: any) {
+      console.error('User creation error:', error);
       toast({
         title: "Error",
-        description: "Failed to save user.",
+        description: error.message || "Failed to save user.",
         variant: "destructive"
       });
     }
