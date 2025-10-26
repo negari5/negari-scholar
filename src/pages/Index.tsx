@@ -1,4 +1,4 @@
-import { useAuth } from "@/contexts/MockAuthContext";
+import { useAuth } from "@/contexts/AuthContext";
 import AuthenticatedIndex from "./AuthenticatedIndex";
 import LandingPage from "@/components/LandingPage";
 

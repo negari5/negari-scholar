@@ -11,7 +11,7 @@ import FamilySupport from "@/components/FamilySupport";
 import UpdatesAnnouncements from "@/components/UpdatesAnnouncements";
 import BottomNavigation from "@/components/BottomNavigation";
 import AuthButton from "@/components/AuthButton";
-import { useAuth } from "@/contexts/MockAuthContext";
+import { useAuth } from "@/contexts/AuthContext";
 import ProfileCompletion from "@/components/ProfileCompletion";
 import DreamTracker from "@/components/DreamTracker";
 import UserTypeBasedContent from "@/components/UserTypeBasedContent";

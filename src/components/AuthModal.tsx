@@ -4,7 +4,8 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/u
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { useAuth } from '@/contexts/MockAuthContext';
+import { useAuth } from '@/contexts/AuthContext';
+import { useNavigate } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import UserTypeSelector from './UserTypeSelector';
@@ -34,6 +35,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
   
   const { signIn, signUp } = useAuth();
   const { toast } = useToast();
+  const navigate = useNavigate();
 
   const ethiopianCities = [
     'Addis Ababa',
@@ -99,9 +101,21 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
         } else {
           toast({
             title: "Account Created!",
-            description: "Welcome to Negari! Please check your email to verify your account."
+            description: "Welcome to Negari! Your account has been created successfully."
           });
-          setShowEmailConfirmation(true);
+          // Close modal and redirect after signup
+          onClose();
+          resetForm();
+          // Redirect based on user type
+          if (userType === 'student') {
+            navigate('/student');
+          } else if (userType === 'parent') {
+            navigate('/parent');
+          } else if (userType === 'mentor') {
+            navigate('/mentor');
+          } else if (userType === 'school') {
+            navigate('/school');
+          }
         }
       }
     } catch (error) {

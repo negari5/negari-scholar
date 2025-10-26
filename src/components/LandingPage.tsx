@@ -3,7 +3,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { GraduationCap, ChevronDown, Target, Users, Award, BookOpen, Brain, Sparkles, Star, Mail, Phone, MapPin, Shield, Globe, Smartphone, FileText, Heart, TrendingUp, Clock, Zap, MessageSquare } from "lucide-react";
-import { useAuth } from "@/contexts/MockAuthContext";
+import { useAuth } from "@/contexts/AuthContext";
+import { useNavigate } from 'react-router-dom';
 import AuthButton from "@/components/AuthButton";
 import AuthModal from "@/components/AuthModal";
 import SelfAssessment from "@/components/SelfAssessment";
@@ -18,6 +19,7 @@ const LandingPage = () => {
   const { subscriptions } = useSubscriptions();
   const { t } = useLanguage();
   const { toast } = useToast();
+  const navigate = useNavigate();
   const [isScrolled, setIsScrolled] = useState(false);
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [showAssessment, setShowAssessment] = useState(false);
@@ -228,6 +230,18 @@ const LandingPage = () => {
                     <span className="text-sm">Application Tracker</span>
                   </li>
                 </ul>
+                <Button 
+                  onClick={() => {
+                    if (profile) {
+                      navigate('/student');
+                    } else {
+                      setShowAuthModal(true);
+                    }
+                  }}
+                  className="w-full mt-4 bg-amber-500 hover:bg-amber-600 text-white"
+                >
+                  Select Your Journey Path
+                </Button>
               </CardContent>
             </Card>
 
@@ -259,6 +273,18 @@ const LandingPage = () => {
                     <span className="text-sm">Mentor Network</span>
                   </li>
                 </ul>
+                <Button 
+                  onClick={() => {
+                    if (profile) {
+                      navigate('/student');
+                    } else {
+                      setShowAuthModal(true);
+                    }
+                  }}
+                  className="w-full mt-4 bg-sky-500 hover:bg-sky-600 text-white"
+                >
+                  Select Your Journey Path
+                </Button>
               </CardContent>
             </Card>
 
@@ -293,6 +319,12 @@ const LandingPage = () => {
                 <Badge className="mt-4 bg-amber-500/20 text-amber-600 border-amber-500/30">
                   Coming Soon
                 </Badge>
+                <Button 
+                  disabled
+                  className="w-full mt-4 bg-gray-300 text-gray-500 cursor-not-allowed"
+                >
+                  Coming Soon
+                </Button>
               </CardContent>
             </Card>
 
@@ -324,6 +356,18 @@ const LandingPage = () => {
                     <span className="text-sm">Foundation Building</span>
                   </li>
                 </ul>
+                <Button 
+                  onClick={() => {
+                    if (profile) {
+                      navigate('/student');
+                    } else {
+                      setShowAuthModal(true);
+                    }
+                  }}
+                  className="w-full mt-4 bg-sky-500 hover:bg-sky-600 text-white"
+                >
+                  Select Your Journey Path
+                </Button>
               </CardContent>
             </Card>
           </div>
