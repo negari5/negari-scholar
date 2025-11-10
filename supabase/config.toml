@@ -1,1 +1,4 @@
 project_id = "rqtiafihttlsxmluvdhi"
+
+[functions.create-super-admin]
+verify_jwt = false

@@ -4,7 +4,7 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { MockAuthProvider as AuthProvider, useAuth } from "@/contexts/MockAuthContext";
+import { AuthProvider, useAuth } from "@/contexts/AuthContext";
 import { LanguageProvider } from "@/contexts/LanguageContext";
 import { SubscriptionProvider } from "@/contexts/SubscriptionContext";
 import NavigationWrapper from "@/components/NavigationWrapper";
@@ -17,6 +17,7 @@ import Profile from "./pages/Profile";
 import InfoPage from "./pages/InfoPage";
 import AdminDashboard from "./pages/AdminDashboard";
 import SuperAdminSetup from "./pages/SuperAdminSetup";
+import QuickSetup from "./pages/QuickSetup";
 import NotFound from "./pages/NotFound";
 import EnhancedStudentDashboard from "./components/EnhancedStudentDashboard";
 import StudentPage from "./pages/StudentPage";
@@ -30,8 +31,8 @@ const AppContent = () => {
   const { user, profile } = useAuth();
 
   useEffect(() => {
-    // Auto-redirect super admin to admin dashboard after login
-    if (user && profile?.is_super_admin && window.location.pathname === '/') {
+    // Auto-redirect admin to admin dashboard after login
+    if (user && profile?.is_admin && window.location.pathname === '/') {
       window.location.href = '/admin';
     }
   }, [user, profile]);
@@ -47,6 +48,7 @@ const AppContent = () => {
         <Route path="/info" element={<InfoPage />} />
         <Route path="/admin" element={<AdminDashboard />} />
         <Route path="/super-admin-setup" element={<SuperAdminSetup />} />
+        <Route path="/quick-setup" element={<QuickSetup />} />
         <Route path="/student" element={<StudentPage />} />
         <Route path="/mentor" element={<MentorPage />} />
         <Route path="/parent" element={<ParentPage />} />
