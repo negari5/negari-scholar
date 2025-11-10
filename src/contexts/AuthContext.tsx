@@ -13,6 +13,8 @@ interface Profile {
   profile_picture_url: string | null;
   subscription_type: string;
   account_type: string | null;
+  is_admin: boolean;
+  has_completed_profile: boolean;
   created_at: string;
   updated_at: string;
 }

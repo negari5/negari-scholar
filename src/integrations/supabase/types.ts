@@ -233,7 +233,9 @@ export type Database = {
           email: string | null
           fayda_fan_number: string | null
           full_name: string | null
+          has_completed_profile: boolean | null
           id: string
+          is_admin: boolean | null
           phone_number: string | null
           profile_picture_url: string | null
           subscription_type: string | null
@@ -247,7 +249,9 @@ export type Database = {
           email?: string | null
           fayda_fan_number?: string | null
           full_name?: string | null
+          has_completed_profile?: boolean | null
           id: string
+          is_admin?: boolean | null
           phone_number?: string | null
           profile_picture_url?: string | null
           subscription_type?: string | null
@@ -261,7 +265,9 @@ export type Database = {
           email?: string | null
           fayda_fan_number?: string | null
           full_name?: string | null
+          has_completed_profile?: boolean | null
           id?: string
+          is_admin?: boolean | null
           phone_number?: string | null
           profile_picture_url?: string | null
           subscription_type?: string | null
