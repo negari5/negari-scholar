@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { useAuth } from '@/contexts/MockAuthContext';
+import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import { Shield, Lock, Key } from 'lucide-react';
@@ -73,18 +73,48 @@ const SuperAdminSetup: React.FC = () => {
         email,
         password,
         options: {
+          emailRedirectTo: `${window.location.origin}/`,
           data: {
             full_name: `${firstName} ${lastName}`,
-            account_type: 'student'
+            account_type: 'admin'
           }
         }
       });
 
       if (authError) throw authError;
 
+      if (authData.user) {
+        // Update profile to set admin flags
+        const { error: profileError } = await supabase
+          .from('profiles')
+          .update({
+            account_type: 'admin',
+            is_admin: true,
+            has_completed_profile: true,
+            full_name: `${firstName} ${lastName}`
+          })
+          .eq('id', authData.user.id);
+
+        if (profileError) {
+          console.error('Error updating profile:', profileError);
+        }
+
+        // Add admin role
+        const { error: roleError } = await supabase
+          .from('user_roles')
+          .insert({
+            user_id: authData.user.id,
+            role: 'admin'
+          });
+
+        if (roleError) {
+          console.error('Error adding admin role:', roleError);
+        }
+      }
+
       toast({
         title: "Admin Account Created!",
-        description: "Please check your email to verify your account, then sign in.",
+        description: "You can now sign in with your credentials.",
       });
 
       // Clear form
