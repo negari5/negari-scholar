@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { useAuth } from '@/contexts/MockAuthContext';
+import { useAuth } from '@/contexts/AuthContext';
 import AuthModal from './AuthModal';
 import AdminButton from './AdminButton';
 import { LogOut, User } from 'lucide-react';
@@ -11,11 +11,8 @@ const AuthButton: React.FC = () => {
   const [showAuthModal, setShowAuthModal] = useState(false);
 
   const getDisplayName = () => {
-    if (profile?.first_name && profile?.last_name) {
-      return `${profile.first_name} ${profile.last_name}`;
-    }
-    if (profile?.first_name) {
-      return profile.first_name;
+    if (profile?.full_name) {
+      return profile.full_name;
     }
     return user?.email || 'User';
   };
