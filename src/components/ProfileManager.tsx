@@ -376,15 +376,15 @@ const ProfileManager: React.FC = () => {
                 <div>
                   <h4 className="font-medium">Current Plan</h4>
                   <p className="text-sm text-gray-600">
-                    {profile?.subscription_tier === 'premium' ? 'Premium Plan' : 'Free Plan'}
+                    {profile?.subscription_type === 'premium' ? 'Premium Plan' : 'Free Plan'}
                   </p>
                 </div>
-                <Badge className={profile?.subscription_tier === 'premium' ? 'bg-negari-gold text-white' : 'bg-gray-100 text-gray-800'}>
-                  {profile?.subscription_tier || 'Free'}
+                <Badge className={profile?.subscription_type === 'premium' ? 'bg-negari-gold text-white' : 'bg-gray-100 text-gray-800'}>
+                  {profile?.subscription_type || 'Free'}
                 </Badge>
               </div>
 
-              {profile?.subscription_tier === 'free' && (
+              {profile?.subscription_type === 'freemium' && (
                 <div className="p-4 bg-gradient-to-r from-negari-gold/10 to-negari-orange/10 rounded-lg">
                   <h4 className="font-medium text-negari-indigo mb-2">Upgrade to Premium</h4>
                   <p className="text-sm text-gray-600 mb-3">
@@ -396,7 +396,7 @@ const ProfileManager: React.FC = () => {
                 </div>
               )}
 
-              {profile?.subscription_tier === 'premium' && profile?.subscription_expires_at && (
+              {profile?.subscription_type === 'premium' && profile?.subscription_expires_at && (
                 <div>
                   <Label>Subscription Expires</Label>
                   <p className="text-sm text-gray-600">

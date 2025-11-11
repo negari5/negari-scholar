@@ -228,6 +228,7 @@ export type Database = {
         Row: {
           account_type: string | null
           address: string | null
+          career_interests: string[] | null
           city: string | null
           country: string | null
           created_at: string | null
@@ -248,12 +249,16 @@ export type Database = {
           id: string
           interests: string[] | null
           is_admin: boolean | null
+          is_super_admin: boolean | null
           last_name: string | null
           phone: string | null
           phone_number: string | null
+          preferred_countries: string[] | null
+          preferred_fields: string[] | null
           preparatory_school_type: string | null
           profile_picture_url: string | null
           school_name: string | null
+          subscription_expires_at: string | null
           subscription_type: string | null
           target_country: string | null
           updated_at: string | null
@@ -262,6 +267,7 @@ export type Database = {
         Insert: {
           account_type?: string | null
           address?: string | null
+          career_interests?: string[] | null
           city?: string | null
           country?: string | null
           created_at?: string | null
@@ -282,12 +288,16 @@ export type Database = {
           id: string
           interests?: string[] | null
           is_admin?: boolean | null
+          is_super_admin?: boolean | null
           last_name?: string | null
           phone?: string | null
           phone_number?: string | null
+          preferred_countries?: string[] | null
+          preferred_fields?: string[] | null
           preparatory_school_type?: string | null
           profile_picture_url?: string | null
           school_name?: string | null
+          subscription_expires_at?: string | null
           subscription_type?: string | null
           target_country?: string | null
           updated_at?: string | null
@@ -296,6 +306,7 @@ export type Database = {
         Update: {
           account_type?: string | null
           address?: string | null
+          career_interests?: string[] | null
           city?: string | null
           country?: string | null
           created_at?: string | null
@@ -316,12 +327,16 @@ export type Database = {
           id?: string
           interests?: string[] | null
           is_admin?: boolean | null
+          is_super_admin?: boolean | null
           last_name?: string | null
           phone?: string | null
           phone_number?: string | null
+          preferred_countries?: string[] | null
+          preferred_fields?: string[] | null
           preparatory_school_type?: string | null
           profile_picture_url?: string | null
           school_name?: string | null
+          subscription_expires_at?: string | null
           subscription_type?: string | null
           target_country?: string | null
           updated_at?: string | null
