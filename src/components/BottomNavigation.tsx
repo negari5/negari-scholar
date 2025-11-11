@@ -2,7 +2,7 @@
 import { useState } from "react";
 import { Home, Search, Compass, MessageSquare, User, Users, Info } from "lucide-react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { useAuth } from "@/contexts/MockAuthContext";
+import { useAuth } from "@/contexts/AuthContext";
 import { useLanguage } from "@/contexts/LanguageContext";
 
 interface BottomNavigationProps {

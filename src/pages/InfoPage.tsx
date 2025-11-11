@@ -1,5 +1,5 @@
 import React from 'react';
-import { useAuth } from '@/contexts/MockAuthContext';
+import { useAuth } from '@/contexts/AuthContext';
 import InfoSection from '@/components/InfoSection';
 
 const InfoPage: React.FC = () => {

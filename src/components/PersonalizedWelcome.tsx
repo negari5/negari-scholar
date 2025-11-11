@@ -1,7 +1,7 @@
 
 import { useState, useEffect } from "react";
 import { Sunrise, BookOpen, Plane, GraduationCap } from "lucide-react";
-import { useAuth } from "@/contexts/MockAuthContext";
+import { useAuth } from "@/contexts/AuthContext";
 
 const PersonalizedWelcome = () => {
   const { profile } = useAuth();
