@@ -20,7 +20,13 @@ const SuperAdminSetup: React.FC = () => {
   const [firstName, setFirstName] = useState('Super');
   const [lastName, setLastName] = useState('Admin');
   const [loading, setLoading] = useState(false);
-  const [step, setStep] = useState<'verify' | 'create'>('verify');
+  const [step, setStep] = useState<'verify' | 'create' | 'basicInfo'>('verify');
+  const [country, setCountry] = useState('Ethiopia');
+  const [city, setCity] = useState('');
+  const [dateOfBirth, setDateOfBirth] = useState('');
+  const [gender, setGender] = useState('');
+  const [phone, setPhone] = useState('');
+  const [userId, setUserId] = useState<string | null>(null);
 
   // Secret setup code - in production this should be environment variable
   const SUPER_ADMIN_SETUP_CODE = 'NEGARI_SUPER_ADMIN_2024';
@@ -84,53 +90,90 @@ const SuperAdminSetup: React.FC = () => {
       if (authError) throw authError;
 
       if (authData.user) {
-        // Update profile to set admin flags
-        const { error: profileError } = await supabase
-          .from('profiles')
-          .update({
-            account_type: 'admin',
-            is_admin: true,
-            has_completed_profile: true,
-            full_name: `${firstName} ${lastName}`
-          })
-          .eq('id', authData.user.id);
+        setUserId(authData.user.id);
+        toast({
+          title: "Account Created!",
+          description: "Please complete your basic information.",
+        });
+        setStep('basicInfo');
+      }
+    } catch (error: any) {
+      console.error('Error creating admin:', error);
+      toast({
+        title: "Setup Failed",
+        description: error.message || "Failed to create Admin account.",
+        variant: "destructive"
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
 
-        if (profileError) {
-          console.error('Error updating profile:', profileError);
-        }
+  const handleBasicInfoSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (!userId) {
+      toast({
+        title: "Error",
+        description: "User ID not found.",
+        variant: "destructive"
+      });
+      return;
+    }
 
-        // Add admin role
-        const { error: roleError } = await supabase
-          .from('user_roles')
-          .insert({
-            user_id: authData.user.id,
-            role: 'admin'
-          });
+    setLoading(true);
 
-        if (roleError) {
-          console.error('Error adding admin role:', roleError);
-        }
+    try {
+      // Update profile with basic info and admin flags
+      const { error: profileError } = await supabase
+        .from('profiles')
+        .update({
+          account_type: 'admin',
+          is_admin: true,
+          has_completed_profile: true,
+          full_name: `${firstName} ${lastName}`,
+          first_name: firstName,
+          last_name: lastName,
+          country,
+          city,
+          date_of_birth: dateOfBirth,
+          gender,
+          phone
+        })
+        .eq('id', userId);
+
+      if (profileError) throw profileError;
+
+      // Add admin role
+      const { error: roleError } = await supabase
+        .from('user_roles')
+        .insert({
+          user_id: userId,
+          role: 'admin'
+        });
+
+      if (roleError) {
+        console.error('Error adding admin role:', roleError);
       }
 
       toast({
-        title: "Admin Account Created!",
+        title: "Setup Complete!",
         description: "You can now sign in with your credentials.",
       });
 
-      // Clear form
+      // Clear form and redirect
       setEmail('');
       setPassword('');
       setConfirmPassword('');
       setSetupCode('');
       setStep('verify');
       
-      // Redirect to home page
       navigate('/');
     } catch (error: any) {
-      console.error('Error creating admin:', error);
+      console.error('Error completing setup:', error);
       toast({
         title: "Setup Failed",
-        description: error.message || "Failed to create Admin account.",
+        description: error.message || "Failed to complete profile setup.",
         variant: "destructive"
       });
     } finally {
@@ -151,7 +194,9 @@ const SuperAdminSetup: React.FC = () => {
           <p className="text-muted-foreground">
             {step === 'verify' 
               ? 'Enter the setup code to create the Admin account'
-              : 'Create the Admin account'
+              : step === 'create'
+              ? 'Create the Admin account'
+              : 'Complete your basic information'
             }
           </p>
         </CardHeader>
@@ -180,7 +225,7 @@ const SuperAdminSetup: React.FC = () => {
                 Verify Code
               </Button>
             </div>
-          ) : (
+          ) : step === 'create' ? (
             <form onSubmit={handleSuperAdminCreation} className="space-y-4">
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
@@ -260,9 +305,78 @@ const SuperAdminSetup: React.FC = () => {
                   disabled={loading || !email || !password || !confirmPassword}
                   className="flex-1"
                 >
-                  {loading ? 'Creating...' : 'Create Admin'}
+                  {loading ? 'Creating...' : 'Next'}
                 </Button>
               </div>
+            </form>
+          ) : (
+            <form onSubmit={handleBasicInfoSubmit} className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="country">Country</Label>
+                <Input
+                  id="country"
+                  value={country}
+                  onChange={(e) => setCountry(e.target.value)}
+                  required
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="city">City</Label>
+                <Input
+                  id="city"
+                  value={city}
+                  onChange={(e) => setCity(e.target.value)}
+                  required
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="dateOfBirth">Date of Birth</Label>
+                <Input
+                  id="dateOfBirth"
+                  type="date"
+                  value={dateOfBirth}
+                  onChange={(e) => setDateOfBirth(e.target.value)}
+                  required
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="gender">Gender</Label>
+                <select
+                  id="gender"
+                  value={gender}
+                  onChange={(e) => setGender(e.target.value)}
+                  className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                  required
+                >
+                  <option value="">Select gender</option>
+                  <option value="male">Male</option>
+                  <option value="female">Female</option>
+                  <option value="other">Other</option>
+                </select>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="phone">Phone Number</Label>
+                <Input
+                  id="phone"
+                  type="tel"
+                  value={phone}
+                  onChange={(e) => setPhone(e.target.value)}
+                  placeholder="+251..."
+                  required
+                />
+              </div>
+
+              <Button 
+                type="submit"
+                disabled={loading || !country || !city || !dateOfBirth || !gender || !phone}
+                className="w-full"
+              >
+                {loading ? 'Completing Setup...' : 'Complete Setup'}
+              </Button>
             </form>
           )}
         </CardContent>
