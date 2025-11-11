@@ -403,7 +403,8 @@ const ProfileCompletion: React.FC<ProfileCompletionProps> = ({ onComplete }) => 
             {step < 3 ? (
               <Button
                 onClick={handleNext}
-                className="bg-negari-orange hover:bg-negari-indigo px-6"
+                variant="default"
+                className="px-6"
               >
                 Next
               </Button>
