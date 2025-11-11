@@ -228,50 +228,104 @@ export type Database = {
         Row: {
           account_type: string | null
           address: string | null
+          city: string | null
           country: string | null
           created_at: string | null
+          current_grade_level: string | null
+          date_of_birth: string | null
+          dream_major: string | null
+          dream_university: string | null
+          education_level: string | null
           email: string | null
+          english_proficiency_level: string | null
+          extracurricular_activities: string[] | null
           fayda_fan_number: string | null
+          first_name: string | null
           full_name: string | null
+          gender: string | null
+          gpa: number | null
           has_completed_profile: boolean | null
           id: string
+          interests: string[] | null
           is_admin: boolean | null
+          last_name: string | null
+          phone: string | null
           phone_number: string | null
+          preparatory_school_type: string | null
           profile_picture_url: string | null
+          school_name: string | null
           subscription_type: string | null
+          target_country: string | null
           updated_at: string | null
+          user_type: string | null
         }
         Insert: {
           account_type?: string | null
           address?: string | null
+          city?: string | null
           country?: string | null
           created_at?: string | null
+          current_grade_level?: string | null
+          date_of_birth?: string | null
+          dream_major?: string | null
+          dream_university?: string | null
+          education_level?: string | null
           email?: string | null
+          english_proficiency_level?: string | null
+          extracurricular_activities?: string[] | null
           fayda_fan_number?: string | null
+          first_name?: string | null
           full_name?: string | null
+          gender?: string | null
+          gpa?: number | null
           has_completed_profile?: boolean | null
           id: string
+          interests?: string[] | null
           is_admin?: boolean | null
+          last_name?: string | null
+          phone?: string | null
           phone_number?: string | null
+          preparatory_school_type?: string | null
           profile_picture_url?: string | null
+          school_name?: string | null
           subscription_type?: string | null
+          target_country?: string | null
           updated_at?: string | null
+          user_type?: string | null
         }
         Update: {
           account_type?: string | null
           address?: string | null
+          city?: string | null
           country?: string | null
           created_at?: string | null
+          current_grade_level?: string | null
+          date_of_birth?: string | null
+          dream_major?: string | null
+          dream_university?: string | null
+          education_level?: string | null
           email?: string | null
+          english_proficiency_level?: string | null
+          extracurricular_activities?: string[] | null
           fayda_fan_number?: string | null
+          first_name?: string | null
           full_name?: string | null
+          gender?: string | null
+          gpa?: number | null
           has_completed_profile?: boolean | null
           id?: string
+          interests?: string[] | null
           is_admin?: boolean | null
+          last_name?: string | null
+          phone?: string | null
           phone_number?: string | null
+          preparatory_school_type?: string | null
           profile_picture_url?: string | null
+          school_name?: string | null
           subscription_type?: string | null
+          target_country?: string | null
           updated_at?: string | null
+          user_type?: string | null
         }
         Relationships: []
       }
