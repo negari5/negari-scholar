@@ -143,13 +143,19 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     if (!user) return { error: 'No user logged in' };
     
     try {
-      const { error } = await supabase
+      const { data, error } = await supabase
         .from('profiles')
-        .update(updates)
-        .eq('id', user.id);
+        .upsert({
+          id: user.id,
+          email: user.email,
+          ...updates,
+          updated_at: new Date().toISOString()
+        })
+        .select()
+        .single();
       
-      if (!error && profile) {
-        setProfile({ ...profile, ...updates });
+      if (!error && data) {
+        setProfile(data);
       }
       
       return { error };
