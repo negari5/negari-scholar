@@ -89,9 +89,11 @@ const ProfileCompletion: React.FC<ProfileCompletionProps> = ({ onComplete }) => 
         has_completed_profile: true
       };
 
+      console.log('Submitting profile update:', updateData);
       const { error } = await updateProfile(updateData);
       
       if (error) {
+        console.error('Profile update error:', error);
         toast({
           title: "Error",
           description: "Failed to save profile. Please try again.",
@@ -100,12 +102,16 @@ const ProfileCompletion: React.FC<ProfileCompletionProps> = ({ onComplete }) => 
         return;
       }
 
+      console.log('Profile updated successfully');
       toast({
         title: "Profile Completed!",
         description: "Welcome to Negari! Let's start your journey.",
       });
       
-      onComplete();
+      // Wait a bit for the database to update before redirecting
+      setTimeout(() => {
+        onComplete();
+      }, 500);
     } catch (error) {
       console.error('Profile completion error:', error);
       toast({
