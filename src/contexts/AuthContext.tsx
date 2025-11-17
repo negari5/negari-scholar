@@ -143,6 +143,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     if (!user) return { error: 'No user logged in' };
     
     try {
+      console.log('Updating profile for user:', user.id);
       const { data, error } = await supabase
         .from('profiles')
         .upsert({
@@ -154,11 +155,17 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         .select()
         .single();
       
-      if (!error && data) {
+      if (error) {
+        console.error('Supabase update error:', error);
+        return { error };
+      }
+      
+      if (data) {
+        console.log('Profile updated in DB, updating local state:', data);
         setProfile(data);
       }
       
-      return { error };
+      return { error: null };
     } catch (error) {
       console.error('Profile update error:', error);
       return { error };
