@@ -180,6 +180,35 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
           </DialogTitle>
         </DialogHeader>
         
+        {/* Login/Signup Toggle Tabs */}
+        <div className="flex gap-2 p-1 bg-muted rounded-lg mb-4">
+          <button
+            type="button"
+            onClick={() => {
+              setIsLogin(false);
+              setUserType(null);
+            }}
+            className={`flex-1 py-2.5 px-4 rounded-md font-semibold transition-all ${
+              !isLogin 
+                ? 'bg-primary text-white shadow-sm' 
+                : 'text-muted-foreground hover:text-foreground'
+            }`}
+          >
+            Sign Up
+          </button>
+          <button
+            type="button"
+            onClick={() => setIsLogin(true)}
+            className={`flex-1 py-2.5 px-4 rounded-md font-semibold transition-all ${
+              isLogin 
+                ? 'bg-primary text-white shadow-sm' 
+                : 'text-muted-foreground hover:text-foreground'
+            }`}
+          >
+            Sign In
+          </button>
+        </div>
+        
         {!isLogin && !userType && (
           <div className="space-y-6">
             <div className="text-center mb-6">
@@ -207,15 +236,6 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
               ))}
             </div>
             
-            <div className="text-center">
-              <button
-                type="button"
-                onClick={toggleMode}
-                className="text-secondary hover:text-primary transition-colors font-medium"
-              >
-                Already have an account? Sign in
-              </button>
-            </div>
           </div>
         )}
 
@@ -510,17 +530,6 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
           </div>
         )}
 
-        {(isLogin || (!isLogin && userType)) && (
-          <div className="text-center">
-            <button
-              type="button"
-              onClick={toggleMode}
-              className="text-secondary hover:text-primary transition-colors font-medium"
-            >
-              {isLogin ? "Don't have an account? Sign up" : "Already have an account? Sign in"}
-            </button>
-          </div>
-        )}
       </DialogContent>
     </Dialog>
   );
