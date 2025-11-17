@@ -26,19 +26,7 @@ const AuthenticatedIndex = () => {
   const { profile } = useAuth();
   const navigate = useNavigate();
 
-  // Show profile completion if profile is not complete
-  console.log('AuthenticatedIndex - profile:', profile);
-  if (profile && !profile.has_completed_profile) {
-    console.log('Showing profile completion form');
-    return <ProfileCompletion onComplete={() => {
-      console.log('Profile completion callback triggered');
-      // Force a reload to refetch the profile and navigate properly
-      window.location.href = '/';
-    }} />;
-  }
-
-  console.log('Showing landing page for authenticated user');
-  // Show landing page for authenticated users with completed profile
+  // Show landing page for all authenticated users
   return (
     <div className="min-h-screen overflow-auto">
       <LandingPage />
