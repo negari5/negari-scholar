@@ -28,10 +28,13 @@ const AuthenticatedIndex = () => {
 
   // Show profile completion if profile is not complete
   if (profile && !profile.has_completed_profile) {
-    return <ProfileCompletion onComplete={() => window.location.reload()} />;
+    return <ProfileCompletion onComplete={() => {
+      // Force a reload to refetch the profile and navigate properly
+      window.location.href = '/';
+    }} />;
   }
 
-  // Show landing page for unauthenticated users or as main page
+  // Show landing page for authenticated users with completed profile
   return (
     <div className="min-h-screen overflow-auto">
       <LandingPage />

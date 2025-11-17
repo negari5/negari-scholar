@@ -412,7 +412,8 @@ const ProfileCompletion: React.FC<ProfileCompletionProps> = ({ onComplete }) => 
               <Button
                 onClick={handleSubmit}
                 disabled={loading}
-                className="bg-negari-orange hover:bg-negari-indigo px-6"
+                variant="default"
+                className="px-6"
               >
                 {loading ? "Saving..." : "Complete Profile"}
               </Button>
