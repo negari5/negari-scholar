@@ -3,7 +3,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, useNavigate, useLocation } from "react-router-dom";
 import { AuthProvider, useAuth } from "@/contexts/AuthContext";
 import { LanguageProvider } from "@/contexts/LanguageContext";
 import { SubscriptionProvider } from "@/contexts/SubscriptionContext";
@@ -29,13 +29,16 @@ const queryClient = new QueryClient();
 
 const AppContent = () => {
   const { user, profile } = useAuth();
+  const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
     // Auto-redirect admin to admin dashboard after login
-    if (user && profile?.is_admin && window.location.pathname === '/') {
-      window.location.href = '/admin';
+    if (user && profile?.is_admin && location.pathname === '/') {
+      console.log('Admin detected, redirecting to /admin');
+      navigate('/admin', { replace: true });
     }
-  }, [user, profile]);
+  }, [user, profile, navigate, location.pathname]);
 
   return (
     <NavigationWrapper>
