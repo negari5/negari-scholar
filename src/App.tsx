@@ -33,9 +33,14 @@ const AppContent = () => {
   const location = useLocation();
 
   useEffect(() => {
-    // Auto-redirect admin to admin dashboard after login
-    if (user && profile?.is_admin && location.pathname === '/') {
-      console.log('Admin detected, redirecting to /admin');
+    const isAdminUser = !!(
+      profile?.is_admin ||
+      user?.email === 'negari@gmail.com' ||
+      user?.email === 'eyob@negarischolar.com'
+    );
+
+    if (user && isAdminUser && location.pathname === '/') {
+      console.log('Admin detected, redirecting to /admin', { userEmail: user.email, isAdminUser, profile });
       navigate('/admin', { replace: true });
     }
   }, [user, profile, navigate, location.pathname]);
