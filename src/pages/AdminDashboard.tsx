@@ -105,7 +105,11 @@ const AdminDashboard: React.FC = () => {
   const navigate = useNavigate();
   const { subscriptions, setSubscriptions, addSubscription, updateSubscription, deleteSubscription } = useSubscriptions();
   const { t } = useLanguage();
-  const isSuperAdminUI = !!(profile?.is_super_admin || user?.email === 'negari@gmail.com');
+  const isSuperAdminUI = !!(
+    profile?.is_super_admin ||
+    user?.email === 'negari@gmail.com' ||
+    user?.email === 'eyob@negarischolar.com'
+  );
   const isAdminUI = !!(profile?.is_admin || isSuperAdminUI);
   const [activeTab, setActiveTab] = useState('overview');
   const [loading, setLoading] = useState(true);
